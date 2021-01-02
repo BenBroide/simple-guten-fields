@@ -130,6 +130,50 @@ function sgf_post_fields( $fields_array ) {
 		],
 	];
 
+	// Simple repeater
+	$fields_array[] = [
+		'meta_key'     => 'books',
+		'control'      => 'repeater',
+		'type'         => 'array',
+		'default'      => [ [ 'title' => '' ] ],
+		'show_in_rest' => [
+			'schema' => [
+				'items' => [
+					'type'       => 'object',
+					'properties' => [
+						'title' => [
+							'type' => 'string',
+						],
+					],
+				],
+			],
+		],
+	];
+
+	// Repeater with multiple fields
+	$fields_array[] = [
+		'meta_key'     => 'external_reviews',
+		'control'      => 'repeater',
+		'type'         => 'array',
+		'default'      =>  [],
+		'show_in_rest' => [
+			'schema' => [
+				'items' => [
+					'type'       => 'object',
+					'properties' => [
+						'url'   => [
+							'type'   => 'string',
+						],
+						'site_name' => [
+							'type' => 'string',
+						],
+					],
+				]
+			],
+		],
+//		'panel' => 'external-reviews'
+	];
+
 	$fields_array = array_map( function ( $field ) {
 		$field['post_type'] = $field['post_type'] ?? 'post';
 		$field['control']   = $field['control'] ?? 'text';
