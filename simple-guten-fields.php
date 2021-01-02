@@ -35,7 +35,7 @@ function create_block_simple_guten_fields_init() {
 		$script_asset['version']
 	);
 
-	$fields = apply_filters( 'sgf_meta_fields', [] );
+	$fields = apply_filters( 'sgf_register_fields', [] );
 	$data   = [
 		'fields'      => $fields,
 	];
@@ -47,8 +47,6 @@ add_action( 'admin_enqueue_scripts', 'create_block_simple_guten_fields_init' );
 
 function sgf_meta_fields() {
 	$fields_array = apply_filters( 'sgf_register_fields', [] );
-	var_dump($fields_array);
-	die();
 	foreach ( $fields_array as $field ) {
 
 		// Ensure post type exists and field name is valid
