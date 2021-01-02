@@ -35,7 +35,7 @@ function create_block_simple_guten_fields_init() {
 		$script_asset['version']
 	);
 
-	$fields = apply_filters( 'sgf_register_fields', [] );
+	$fields = apply_filters( 'sgf_meta_fields', [] );
 	$data   = [
 		'fields'      => $fields,
 	];
@@ -45,14 +45,17 @@ function create_block_simple_guten_fields_init() {
 }
 add_action( 'admin_enqueue_scripts', 'create_block_simple_guten_fields_init' );
 
-function sgf_register_fields() {
-	$fields_array = apply_filters( 'ats_register_fields', [] );
+function sgf_meta_fields() {
+	$fields_array = apply_filters( 'sfg_register_fields', [] );
+	var_dump($fields_array);
+	die();
 	foreach ( $fields_array as $field ) {
 
 		// Ensure post type exists and field name is valid
 		if ( ! $field['post_type'] || ! post_type_exists( $field['post_type'] ) || ! $field['meta_key'] || ! is_string( $field['meta_key'] ) ) {
 			return;
 		}
+
 
 		// Using Null Coalesce Operator to set defaults
 		register_post_meta( $field['post_type'], $field['meta_key'], [
@@ -71,14 +74,17 @@ function sgf_register_fields() {
 	}, 10
 	);
 }
-add_action('rest_api_init', 'sgf_filters');
-function sgf_filters(){
-	add_filter( 'sgf_register_fields', 'sgf_register_post_fields', 10 );
-}
+//add_action('init', 'sgf_filters', 0);
+//function sgf_filters(){
+//	add_filter( 'sgf_meta_fields', 'sgf_post_fields' );
+//	sgf_meta_fields();
+//}
 
+add_action( 'rest_api_init', 'sgf_meta_fields' , 0);
+add_filter( 'sgf_register_fields', 'sgf_post_fields' );
 
 // Register operator fields
-function sgf_register_post_fields( $fields_array ) {
+function sgf_post_fields( $fields_array ) {
 	//Simple text field
 	$fields_array[] = [
 		'meta_key' => 'publisher',
