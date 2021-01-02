@@ -46,7 +46,7 @@ function create_block_simple_guten_fields_init() {
 add_action( 'admin_enqueue_scripts', 'create_block_simple_guten_fields_init' );
 
 function sgf_meta_fields() {
-	$fields_array = apply_filters( 'sfg_register_fields', [] );
+	$fields_array = apply_filters( 'sgf_register_fields', [] );
 	var_dump($fields_array);
 	die();
 	foreach ( $fields_array as $field ) {
