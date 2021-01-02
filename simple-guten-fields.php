@@ -100,11 +100,11 @@ function sgf_post_fields( $fields_array ) {
 	$month_options = array_map( function ( $value ) {
 		$label = date('F', strtotime(date('Y')."-".str_pad($value,2,'0',STR_PAD_LEFT)."-01"));
 		return [ 'value' => $value, 'label' => $label ];
-	}, range( 1, 12 ) ) ;
+	}, range( 0, 11 ) ) ;
 
 	$fields_array[] = [
 		'meta_key' => 'month',
-		'default'  => (int)date('F'),
+		'default'  => (int)date('n'),
 		'control'  => 'select',
 		'options'  => $month_options,
 		'type'     => 'number',
