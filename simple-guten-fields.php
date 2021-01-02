@@ -104,7 +104,7 @@ function sgf_post_fields( $fields_array ) {
 
 	$fields_array[] = [
 		'meta_key' => 'month',
-		'default'  => (int)date('n'),
+		'default'  => (int)date('n')-1,
 		'control'  => 'select',
 		'options'  => $month_options,
 		'type'     => 'number',
