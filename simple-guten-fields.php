@@ -104,31 +104,31 @@ function sgf_post_fields( $fields_array ) {
 
 	$fields_array[] = [
 		'meta_key' => 'month',
-		'default'  => date('F'),
+		'default'  => (int)date('F'),
 		'control'  => 'select',
 		'options'  => $month_options,
 		'type'     => 'number',
 	];
 
 	// Simple repeater
-//	$fields_array[] = [
-//		'meta_key'     => 'books',
-//		'control'      => 'repeater',
-//		'type'         => 'array',
-//		'default'      => [ [ 'title' => '' ] ],
-//		'show_in_rest' => [
-//			'schema' => [
-//				'items' => [
-//					'type'       => 'object',
-//					'properties' => [
-//						'title' => [
-//							'type' => 'string',
-//						],
-//					],
-//				],
-//			],
-//		],
-//	];
+	$fields_array[] = [
+		'meta_key'     => 'books',
+		'control'      => 'repeater',
+		'type'         => 'array',
+		'default'      => [ [ 'title' => '' ] ],
+		'show_in_rest' => [
+			'schema' => [
+				'items' => [
+					'type'       => 'object',
+					'properties' => [
+						'title' => [
+							'type' => 'string',
+						],
+					],
+				],
+			],
+		],
+	];
 
 	$fields_array = array_map( function ( $field ) {
 		$field['post_type'] = $field['post_type'] ?? 'post';
