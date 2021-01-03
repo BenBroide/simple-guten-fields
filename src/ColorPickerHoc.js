@@ -3,7 +3,7 @@ const {ColorPicker} = wp.components
 import {withState} from '@wordpress/compose';
 
 const ColorPickerHoc = ({field}) => {
-	const {meta_key} = field
+	const {meta_key,label} = field
 
 	let FieldControl = withState({
 		showPicker: false,
@@ -15,7 +15,7 @@ const ColorPickerHoc = ({field}) => {
 					setState({showPicker: !showPicker})
 				}}
 					 style={{display: 'flex'}}>
-					<button >Pick Color for {meta_key}</button>
+					<button >Pick Color for {label}</button>
 					<div style={{height: '22px', width: '200px', backgroundColor: color}}></div>
 				</div>
 				{showPicker && <ColorPicker

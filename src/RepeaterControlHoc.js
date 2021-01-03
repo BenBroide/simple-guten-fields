@@ -9,9 +9,10 @@ const RepeaterControlHoc = ({field}) => {
     let propertiesKeys = Object.entries(properties).map(item => item[0])
 
     let ControlField = ({value, handleFieldChange, addItem, removeItem}) => {
-        let arrayValues = useSelect(
-            select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
-        );
+
+		let arrayValues = useSelect(
+			select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+		);
 
         return <>
             <h3>{label}:</h3>

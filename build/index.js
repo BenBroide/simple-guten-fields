@@ -138,7 +138,8 @@ var ColorPicker = wp.components.ColorPicker;
 
 var ColorPickerHoc = function ColorPickerHoc(_ref) {
   var field = _ref.field;
-  var meta_key = field.meta_key;
+  var meta_key = field.meta_key,
+      label = field.label;
   var FieldControl = Object(_wordpress_compose__WEBPACK_IMPORTED_MODULE_2__["withState"])({
     showPicker: false
   })(function (_ref2) {
@@ -159,7 +160,7 @@ var ColorPickerHoc = function ColorPickerHoc(_ref) {
       style: {
         display: 'flex'
       }
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("button", null, "Pick Color for ", meta_key), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("button", null, "Pick Color for ", label), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
       style: {
         height: '22px',
         width: '200px',
@@ -459,6 +460,7 @@ __webpack_require__.r(__webpack_exports__);
 var _wp$data = wp.data,
     withSelect = _wp$data.withSelect,
     withDispatch = _wp$data.withDispatch,
+    useSelect = _wp$data.useSelect,
     select = _wp$data.select;
 var TextControl = wp.components.TextControl;
 
@@ -472,7 +474,7 @@ var TextFieldHoc = function TextFieldHoc(_ref) {
         handleValueChange = _ref2.handleValueChange;
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
       label: "Set ".concat(label),
-      value: select('core/editor').getEditedPostAttribute('meta')[meta_key],
+      value: value,
       onChange: function onChange(value) {
         return handleValueChange(value);
       }
@@ -480,13 +482,13 @@ var TextFieldHoc = function TextFieldHoc(_ref) {
   };
 
   FieldControl = withSelect(function (select) {
-    return _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, meta_key, select('core/editor').getEditedPostAttribute('meta')[meta_key]);
+    return {
+      value: select('core/editor').getEditedPostAttribute('meta')[meta_key]
+    };
   })(FieldControl);
   FieldControl = withDispatch(function (dispatch) {
     return {
       handleValueChange: function handleValueChange(value) {
-        value = "".concat(value);
-        console.log(value);
         dispatch('core/editor').editPost({
           meta: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, meta_key, value)
         });
@@ -538,9 +540,13 @@ var controlsIndex = {
 
 var CustomFieldsPanel = function CustomFieldsPanel() {
   var fields = window.sgf_data.fields;
-  var currentCpt = wp.data.select('core/editor').getCurrentPostType(); // if(!fields.map(field => field.post_type).includes( currentCpt)) {
-  // 	return null;
-  // }
+  var currentCpt = wp.data.select('core/editor').getCurrentPostType();
+
+  if (!fields.map(function (field) {
+    return field.post_type;
+  }).includes(currentCpt)) {
+    return null;
+  }
 
   if (fields) {
     fields = fields.filter(function (field) {
@@ -548,6 +554,7 @@ var CustomFieldsPanel = function CustomFieldsPanel() {
     });
   }
 
+  console.log(fields);
   var panels = fields.map(function (field) {
     return field.panel;
   }).filter(function (item, i, array) {
@@ -558,7 +565,7 @@ var CustomFieldsPanel = function CustomFieldsPanel() {
       key: panelIndex
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__["PluginDocumentSettingPanel"], {
       name: panel,
-      title: panel.replace('-', ' '),
+      title: panel.replace('-', ' ').replace('_', ' '),
       className: "custom-panel"
     }, fields.filter(function (field) {
       return field.panel === panel;

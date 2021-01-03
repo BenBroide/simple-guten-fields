@@ -1,4 +1,5 @@
 import {MediaUpload, MediaUploadCheck} from '@wordpress/block-editor';
+
 const {Button} = wp.components
 const {dispatch, useSelect} = wp.data
 
@@ -16,8 +17,8 @@ const ImagePlaceholder = () => (
 	}}>SET IMAGE</div>
 )
 
-const mediaUploadHoc =({field}) => {
-	let {meta_key,label } = field
+const mediaUploadHoc = ({field}) => {
+	let {meta_key, label} = field
 	const imageId = useSelect(
 		select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
 	);
@@ -28,26 +29,26 @@ const mediaUploadHoc =({field}) => {
 
 	return (
 		<div>
-				<div>
+			<div>
 
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={(media) => {
-								dispatch('core/editor').editPost({meta: {[meta_key]: media.id}})
-							}}
-							allowedTypes={ALLOWED_MEDIA_TYPES}
-							value={imageId}
-							render={({open}) => {
-								return <div onClick={open}>
-									{!imageUrl ? <ImagePlaceholder/> :
-										<div style={{textAlign:'center'}}><img style={{maxWidth: '200px'}} src={imageUrl}/></div>}
-									<Button className={'components-button is-secondary'}>Click to Select {label}</Button>
-								</div>
-							}}
-						/>
-					</MediaUploadCheck>
-				</div>
-			{/*}*/}
+				<MediaUploadCheck>
+					<MediaUpload
+						onSelect={(media) => {
+							dispatch('core/editor').editPost({meta: {[meta_key]: media.id}})
+						}}
+						allowedTypes={ALLOWED_MEDIA_TYPES}
+						value={imageId}
+						render={({open}) => {
+							return <div onClick={open}>
+								{!imageUrl ? <ImagePlaceholder/> :
+									<div style={{textAlign: 'center'}}><img style={{maxWidth: '200px'}} src={imageUrl}/>
+									</div>}
+								<Button className={'components-button is-secondary'}>Click to Select {label}</Button>
+							</div>
+						}}
+					/>
+				</MediaUploadCheck>
+			</div>
 		</div>
 	);
 }

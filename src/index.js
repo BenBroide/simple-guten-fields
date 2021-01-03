@@ -20,20 +20,21 @@ const CustomFieldsPanel = () => {
 	let fields = window.sgf_data.fields;
 
 	let currentCpt = wp.data.select('core/editor').getCurrentPostType()
-	// if(!fields.map(field => field.post_type).includes( currentCpt)) {
-	// 	return null;
-	// }
+	if(!fields.map(field => field.post_type).includes( currentCpt)) {
+		return null;
+	}
 
 	if(fields) {
 		fields = fields.filter(field => field.post_type == currentCpt)
 	}
+	console.log(fields)
 	let panels = fields.map(field => field.panel).filter((item, i, array) => array.indexOf(item) === i)
 	return <div>
 		{panels.map((panel, panelIndex) => {
 			return <div key={panelIndex}>
 				<PluginDocumentSettingPanel
 					name={panel}
-					title={panel.replace('-', ' ')}
+					title={panel.replace('-', ' ').replace('_', ' ')}
 					className="custom-panel"
 				>
 					{fields.filter(field => field.panel === panel).map((field, index) => {
