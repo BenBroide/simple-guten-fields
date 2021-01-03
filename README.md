@@ -47,4 +47,4 @@ In the resources below you can more about `register_post_meta` and `show_in_rest
 The file ```register-fields.php``` contains examples for all fields
 
 ### Experimental concept
-This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not use this as is on a live site.
+This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not the plugin as is on a live site.
