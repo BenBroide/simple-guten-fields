@@ -34,13 +34,15 @@ In the resources below you can more about `register_post_meta` and `show_in_rest
 
 [show_in_rest](https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/)
 
-### Controls
+### Controls values type references
 
-* text
-* color
-* select
-* media
-* repeater
+| control  | type |
+| --- | --- |
+| text.default  | string - hex color ```#51de68```|
+| color.default  | string  |
+| select.options  | array ```[['label'=>'','value'=> '']]```|
+| media.default  | int ```Image Post ID``` |
+| repeater.default   |array (per show_in_rest schema) |
   
 The file ```register-fields.php``` contains examples for all fields
 
