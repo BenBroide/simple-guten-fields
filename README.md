@@ -8,7 +8,7 @@ In post type "post" editor rigth sidebar should now appear new panels with field
 
 **Note**: If the fields do not update after saving, ensure in editor settings->preferences->additional panels "custom fields" is not checked, since that the default custom fields of WordPress appear below may override your fields values.
 
-### Register fields from your theme/plugin
+### Filter for fields registration from a diffrent theme/plugin
 the filter ```sgf_register_fields```  accepts array with fields. For a simple start you can copy the content of ```register-fields.php``` file which includes a few fields examples to your theme/plugin.
 
 example:
