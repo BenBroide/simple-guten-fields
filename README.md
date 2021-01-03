@@ -9,7 +9,7 @@ In post type "post" editor rigth sidebar should now appear new panels with field
 **Note**: If the fields do not update after saving, ensure in editor settings->preferences->additional panels "custom fields" is not checked, since that the default custom fields of WordPress appear below may override your fields values.
 
 ### Register fields from your theme/plugin
-the filter ```sgf_register_fields```  accepts array with fields. For a simple start you can copy the content of ```register-fields``` file which includes a few fields examples to your theme/plugin.
+the filter ```sgf_register_fields```  accepts array with fields. For a simple start you can copy the content of ```register-fields.php``` file which includes a few fields examples to your theme/plugin.
 
 example:
 
@@ -28,12 +28,21 @@ function sgf_post_fields( $fields_array ) {
 ### Field parameters
 The field parameters map to ```register_post_meta``` params, except the ```control``` and ```panel``` params than are used in JavaScript to render the fields.
 
-In the resurces below you can more about `register_post_meta` and `show_in_rest` parameter.
+In the resources below you can more about `register_post_meta` and `show_in_rest` parameter.
 
 [register_post_meta](https://developer.wordpress.org/block-editor/tutorials/metabox/meta-block-2-register-meta/)
 
 [show_in_rest](https://make.wordpress.org/core/2019/10/03/wp-5-3-supports-object-and-array-meta-types-in-the-rest-api/)
 
+### Controls
+
+* text
+* color
+* select
+* media
+* repeater
+  
+The file ```register-fields.php``` contains examples for all fields
 
 ### Experimental concept
 This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not use this as is on a live site.
