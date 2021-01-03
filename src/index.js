@@ -27,7 +27,7 @@ const CustomFieldsPanel = () => {
 	if(fields) {
 		fields = fields.filter(field => field.post_type == currentCpt)
 	}
-	console.log(fields)
+
 	let panels = fields.map(field => field.panel).filter((item, i, array) => array.indexOf(item) === i)
 	return <div>
 		{panels.map((panel, panelIndex) => {

@@ -554,7 +554,6 @@ var CustomFieldsPanel = function CustomFieldsPanel() {
     });
   }
 
-  console.log(fields);
   var panels = fields.map(function (field) {
     return field.panel;
   }).filter(function (item, i, array) {
