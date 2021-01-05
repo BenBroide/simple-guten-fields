@@ -1,4 +1,4 @@
-## Adding Custom fields to Gutenberg can be simple.
+## Adding Custom fields to Gutenberg simplified.
 
 Simple Guten Fields is a concept for developers how to add custom fields to Gutenberg editor.
 
