@@ -1,17 +1,34 @@
+import TextFieldHoc from "./TextControlHoc";
+
 const {withSelect, select, withDispatch, useSelect} = wp.data
+const {useMemo} from wp.element
 const {TextControl} = wp.components
 import TextControlHoc from "./TextControlHoc";
+import ColorPickerHoc from "./ColorPickerHoc";
+import SelectControlHoc from "./SelectControlHoc";
+import MediaUploadHoc from "./MediaUploadHoc";
+
+const controlsIndex =
+	{
+		text: TextFieldHoc,
+		color: ColorPickerHoc,
+		select: SelectControlHoc,
+		media: MediaUploadHoc,
+		repeater: RepeaterControlHoc
+	}
 
 const InnerControlComponent = props => {
-	const {key, field, row_index, property_key, repeater_record_label, repeater_values, control_index} = props
-	let ControlField = control_index['text']
-	return <ControlField key={key}
-							  field={field}
-							  row_index={row_index}
-							  property_key={property_key}
-							  repeater_record_label={repeater_record_label}
-							  repeater_values={repeater_values}
-	/>
+	const {key, field, row_index, property_key, repeater_record_label, repeater_values} = props
+	let ControlField = controlsIndex['text']
+	// return useMemo(() => {
+		return <ControlField key={key}
+					  field={field}
+					  row_index={row_index}
+					  property_key={property_key}
+					  repeater_record_label={repeater_record_label}
+					  repeater_values={repeater_values}
+		/>
+	// },[])
 }
 
 let ControlField = ({value, handleFieldChange, addItem, removeItem, field, controlsIndex}) => {
