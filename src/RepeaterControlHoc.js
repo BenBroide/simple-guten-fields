@@ -1,32 +1,25 @@
 import TextFieldHoc from "./TextControlHoc";
-
+import controlsIndex from "./controlsIndex";
 const {withSelect, select, withDispatch, useSelect} = wp.data
 const {useMemo} from wp.element
 const {TextControl} = wp.components
-import TextControlHoc from "./TextControlHoc";
-import ColorPickerHoc from "./ColorPickerHoc";
-import SelectControlHoc from "./SelectControlHoc";
-import MediaUploadHoc from "./MediaUploadHoc";
 
-const controlsIndex =
-	{
-		text: TextFieldHoc,
-		color: ColorPickerHoc,
-		select: SelectControlHoc,
-		media: MediaUploadHoc,
-		repeater: RepeaterControlHoc
-	}
+
 
 const InnerControlComponent = props => {
 	const {key, field, row_index, property_key, repeater_record_label, repeater_values} = props
 	let ControlField = controlsIndex['text']
+	// let repeaterValues = useSelect(
+	// 	select => select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
+	// );
+	// let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
 	// return useMemo(() => {
 		return <ControlField key={key}
 					  field={field}
 					  row_index={row_index}
 					  property_key={property_key}
 					  repeater_record_label={repeater_record_label}
-					  repeater_values={repeater_values}
+					  repeater_values={repeaterValues}
 		/>
 	// },[])
 }
@@ -37,10 +30,10 @@ let ControlField = ({value, handleFieldChange, addItem, removeItem, field, contr
 
 	const properties = show_in_rest?.schema?.items?.properties
 	let propertiesKeys = Object.entries(properties).map(item => item[0])
-	let repeaterValues = useSelect(
-		select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
-	);
-	// let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+	// let repeaterValues = useSelect(
+	// 	select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+	// );
+	let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
 	return <>
 		<h3>{`${label}`} (Repeater field):</h3>
 		{repeaterValues.map((row, index) => {

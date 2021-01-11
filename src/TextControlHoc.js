@@ -8,16 +8,12 @@ let ControlField = (props) => {
 	const property_key = props?.property_key
 	const row_index = props?.row_index
 	const notRepeaterField = typeof row_index === 'undefined'
-	let value = ''
 	let fieldLabel = ''
+	let value = select('core/editor').getEditedPostAttribute('meta')[field.meta_key]
 	if(notRepeaterField) {
 		fieldLabel = field.label
-		value = select('core/editor').getEditedPostAttribute('meta')[meta_key]
 	} else {
-		console.log(meta_key)
 		fieldLabel = property_key.replace('_', ' ')
-		value = select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index][property_key]
-
 	}
 	return <TextControl
 		key={meta_key + row_index + property_key}
@@ -28,8 +24,8 @@ let ControlField = (props) => {
 };
 
 ControlField = withSelect(
-	(select) => {
-		return select('core/editor').getEditedPostAttribute('meta')[meta_key]
+	(select,{field}) => {
+		return   select('core/editor').getEditedPostAttribute('meta')[field.meta_key]
 	}
 )(ControlField);
 
@@ -39,7 +35,9 @@ ControlField = withDispatch(
 			handleValueChange: (value) => {
 				let newValue = value
 				if(!notRepeaterField) {
-					let repeaterValues = props.repeater_values
+					let repeaterValues = useSelect(
+							select => select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
+						);
 					newValue = repeaterValues.map((row, innerIndex) => {
 						return innerIndex === row_index ? {...row, [property_key]: value} : row
 					})
