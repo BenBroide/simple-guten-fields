@@ -60,12 +60,12 @@ const RepeaterControlHoc = ({field,controlsIndex}) => {
 	ControlField = withDispatch(
 		(dispatch) => {
 			return {
-				handleFieldChange: (repeaterValues, index, property_key, value) => {
-					repeaterValues[index] = repeaterValues[index]
-					repeaterValues[index][property_key] = value
-					let repeaterValuesCopy = repeaterValues.splice(0)
-					dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValuesCopy}})
-				},
+				// handleFieldChange: (repeaterValues, index, property_key, value) => {
+				// 	repeaterValues[index] = repeaterValues[index]
+				// 	repeaterValues[index][property_key] = value
+				// 	let repeaterValuesCopy = repeaterValues.splice(0)
+				// 	dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValuesCopy}})
+				// },
 				addItem: (repeaterValues) => {
 					repeaterValues.push({})
 					let repeaterValuesCopy = repeaterValues.splice(0)
