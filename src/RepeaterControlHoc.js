@@ -30,13 +30,14 @@ let ControlField = ({value, handleFieldChange, addItem, removeItem, field, contr
 
 	const properties = show_in_rest?.schema?.items?.properties
 	let propertiesKeys = Object.entries(properties).map(item => item[0])
-	// let repeaterValues = useSelect(
-	// 	select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
-	// );
-	let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+	let repeaterValues = useSelect(
+		select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+	);
+	console.log(repeaterValues)
+	// let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
 	return <>
 		<h3>{`${label}`} (Repeater field):</h3>
-		{repeaterValues.map((row, index) => {
+		{Array.isArray(repeaterValues) && repeaterValues.map((row, index) => {
 			return <div key={`repeaterValues${index}${meta_key}`}>
 				<div><b>Repeater Record {index + 1}:</b></div>
 				{propertiesKeys.map((property_key, innerIndex) => {
