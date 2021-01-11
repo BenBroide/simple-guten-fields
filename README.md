@@ -1,3 +1,5 @@
+## Adding Custom fields to Gutenberg simplified
+
 Simple Guten Fields is a concept for developers how to add custom fields to Gutenberg editor.
 
 Get started:
@@ -8,7 +10,7 @@ In post type "post" editor rigth sidebar should now appear new panels with field
 
 **Note**: If the fields do not update after saving, ensure in editor settings->preferences->additional panels "custom fields" is not checked, since that the default custom fields of WordPress appear below may override your fields values.
 
-### Register fields from your theme/plugin
+### Filter for fields registration from a diffrent theme/plugin
 the filter ```sgf_register_fields```  accepts array with fields. For a simple start you can copy the content of ```register-fields.php``` file which includes a few fields examples to your theme/plugin.
 
 example:
@@ -47,4 +49,4 @@ In the resources below you can more about `register_post_meta` and `show_in_rest
 The file ```register-fields.php``` contains examples for all fields
 
 ### Experimental concept
-This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not use this as is on a live site.
+This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not the plugin as is on a live site.
