@@ -39,7 +39,7 @@ const CustomFieldsPanel = () => {
 				>
 					{fields.filter(field => field.panel === panel).map((field, index) => {
 						let ControlHoc = controlsIndex[field.control]
-						return <><ControlHoc key={index} field={field}/>
+						return <><ControlHoc key={index} field={field} controlsIndex={controlsIndex}/>
 							<hr/>
 						</>
 					})}

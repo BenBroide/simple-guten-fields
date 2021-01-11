@@ -4,7 +4,7 @@
  * Description:     Simple Guten Fields is a concept of adding custom fields to Gutenberg editor.
  */
 include ('register-fields.php');
-function create_block_simple_guten_fields_init() {
+function sgf_load_scripts() {
 	$dir = __DIR__;
 
 	$script_asset_path = "$dir/build/index.asset.php";
@@ -30,7 +30,7 @@ function create_block_simple_guten_fields_init() {
 
 	wp_enqueue_script('sgf-script');
 }
-add_action( 'admin_enqueue_scripts', 'create_block_simple_guten_fields_init' );
+add_action( 'admin_enqueue_scripts', 'sgf_load_scripts' );
 
 function sgf_meta_fields() {
 	$fields_array = apply_filters( 'sgf_register_fields', [] );
@@ -53,11 +53,6 @@ function sgf_meta_fields() {
 
 	}
 
-	add_filter( 'sgf_data', function ( $fields_array_before_filter = [] ) use ( $fields_array ) {
-
-		return array_merge( $fields_array_before_filter, $fields_array );
-	}, 10
-	);
 }
 
 add_action( 'rest_api_init', 'sgf_meta_fields' , 0);
