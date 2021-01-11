@@ -1,4 +1,4 @@
-const {withSelect, withDispatch, useSelect} = wp.data
+const {withSelect,select, withDispatch, useSelect} = wp.data
 const {TextControl} = wp.components
 import TextControlHoc from "./TextControlHoc";
 
@@ -10,20 +10,21 @@ const RepeaterControlHoc = ({field,controlsIndex}) => {
 	let propertiesKeys = Object.entries(properties).map(item => item[0])
 
 	let ControlField = ({value, handleFieldChange, addItem, removeItem}) => {
-		let repeaterValues = useSelect(
-			select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
-		);
-
+		// let repeaterValues = useSelect(
+		// 	select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+		// );
+let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
 		return <>
 			<h3>{`${label}`} (Repeater field):</h3>
 			{repeaterValues.map((row, index) => {
-				return <div key={`repeaterValues${index}`}>
+				return <div key={`repeaterValues${index}${meta_key}`}>
 					<div><b>Repeater Record {index+1}:</b></div>
 					{propertiesKeys.map((property_key, innerIndex) => {
 						let innerField = properties[property_key]
 						innerField.meta_key = meta_key
 						let InnerControlField = controlsIndex['text']
-						return <InnerControlField key={index + property_key}
+						console.log(index + property_key+meta_key)
+						return <InnerControlField key={index + property_key+meta_key}
 												  field={innerField}
 												  row_index = {index}
 												  property_key={property_key}
@@ -65,6 +66,9 @@ const RepeaterControlHoc = ({field,controlsIndex}) => {
 				// 	repeaterValues[index][property_key] = value
 				// 	let repeaterValuesCopy = repeaterValues.splice(0)
 				// 	dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValuesCopy}})
+				// },
+				// handleFieldChange: (value)=>{
+				// 		dispatch('core/editor').editPost({meta: {[meta_key]: value}})
 				// },
 				addItem: (repeaterValues) => {
 					repeaterValues.push({})

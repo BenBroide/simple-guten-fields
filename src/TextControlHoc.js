@@ -15,13 +15,12 @@ const TextFieldHoc = (props) => {
 		if(notRepeaterField) {
 			fieldLabel = field.label
 			value = select('core/editor').getEditedPostAttribute('meta')[meta_key]
-
-
 		} else {
 			fieldLabel = property_key.replace('_', ' ')
 			value = select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index][property_key]
 		}
 		return <TextControl
+
 			label={`Set ${fieldLabel}`}
 			value={value}
 			onChange={value => handleValueChange(value)}
@@ -46,7 +45,9 @@ const TextFieldHoc = (props) => {
 						})
 					}
 					dispatch('core/editor').editPost({meta: {[meta_key]: newValue}})
+
 				}
+
 			}
 		}
 	)(ControlField);
