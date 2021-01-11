@@ -1,57 +1,49 @@
 const {withSelect, select, withDispatch, useSelect} = wp.data
 const {TextControl} = wp.components
 
-let ControlField = (props) => {
-	const {field, handleValueChange} = props
-	const meta_key = field.meta_key
+const ControlField = withSelect(
+	(select, props) => {
+		const {field, row_index, property_key,meta_key} = props;
+		const value = select('core/editor').getEditedPostAttribute('meta')[field.meta_key];
+		const key = meta_key + row_index + property_key
 
-	const property_key = props?.property_key
-	const row_index = props?.row_index
-	const notRepeaterField = typeof row_index === 'undefined'
-	let fieldLabel = ''
-	let value = select('core/editor').getEditedPostAttribute('meta')[field.meta_key]
-	if(notRepeaterField) {
-		fieldLabel = field.label
-	} else {
-		fieldLabel = property_key.replace('_', ' ')
-	}
-	return <TextControl
-		key={meta_key + row_index + property_key}
-		label={`Set ${fieldLabel}`}
-		value={value}
-		onChange={value => handleValueChange(value)}
-	/>
-};
+		if( row_index === undefined ) {
+			return {
+				value,
+				key,
+				label: `Set ${field.label}`
+			};
+		}
 
-ControlField = withSelect(
-	(select,{field}) => {
-		return   select('core/editor').getEditedPostAttribute('meta')[field.meta_key]
-	}
-)(ControlField);
-
-ControlField = withDispatch(
-	(dispatch) => {
 		return {
-			handleValueChange: (value) => {
-				let newValue = value
-				if(!notRepeaterField) {
-					let repeaterValues = useSelect(
-							select => select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
-						);
-					newValue = repeaterValues.map((row, innerIndex) => {
+			value: value[row_index][property_key],
+			key,
+			label: `Set ${property_key.replace('_', ' ')}`
+		};
+	}
+)( TextControl );
+
+export default withDispatch(
+	(dispatch, props) => {
+		const {row_index, meta_key, repeater_values, property_key} = props;
+
+		return {
+			onChange: (value) => {
+				let newValue = value;
+
+				if(row_index !== undefined) {
+					newValue = repeater_values.map((row, innerIndex) => {
 						return innerIndex === row_index ? {...row, [property_key]: value} : row
-					})
+					});
 				}
-				dispatch('core/editor').editPost({meta: {[meta_key]: newValue}})
 
+				dispatch('core/editor').editPost({meta: {[meta_key]: newValue}});
 			}
-
 		}
 	}
 )(ControlField);
 
-
-const TextFieldHoc = (props) => {
-	return <div><ControlField {...props}/></div>
-}
-export default TextFieldHoc
+// const TextFieldHoc = (props) => {
+// 	return <div><ControlField {...props}/></div>
+// }
+// export default TextFieldHoc

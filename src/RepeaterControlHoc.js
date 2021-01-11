@@ -1,7 +1,7 @@
 import TextFieldHoc from "./TextControlHoc";
 import controlsIndex from "./controlsIndex";
 const {withSelect, select, withDispatch, useSelect} = wp.data
-const {useMemo} from wp.element
+// const {useMemo} from wp.element
 const {TextControl} = wp.components
 
 
@@ -9,9 +9,9 @@ const {TextControl} = wp.components
 const InnerControlComponent = props => {
 	const {key, field, row_index, property_key, repeater_record_label, repeater_values} = props
 	let ControlField = controlsIndex['text']
-	// let repeaterValues = useSelect(
-	// 	select => select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
-	// );
+	let repeaterValues = useSelect(
+		select => select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
+	);
 	// let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
 	// return useMemo(() => {
 		return <ControlField key={key}
