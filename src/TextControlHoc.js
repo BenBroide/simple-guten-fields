@@ -1,56 +1,43 @@
-const {withSelect, select,withDispatch, useSelect} = wp.data
+const {withSelect, select, withDispatch, useSelect} = wp.data
 const {TextControl} = wp.components
-const TextFieldHoc = (props) => {
-	const {field} = props
-	const meta_key = field.meta_key
 
-	const property_key = props?.property_key
-	const row_index = props?.row_index
-	const notRepeaterField = typeof row_index === 'undefined'
-	let ControlField = ({handleValueChange}) => {
+const ControlField = withSelect(
+	(select, props) => {
+		const {  label, meta_key} = props.field;
+		const {row_index,property_key} = props
+		const value = select('core/editor').getEditedPostAttribute('meta')[meta_key];
+		const key = meta_key + row_index + property_key;
 
-
-		let value = ''
-		let fieldLabel = ''
-		if(notRepeaterField) {
-			fieldLabel = field.label
-			value = select('core/editor').getEditedPostAttribute('meta')[meta_key]
-
-
-		} else {
-			fieldLabel = property_key.replace('_', ' ')
-			value = select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index][property_key]
+		if( typeof row_index === 'undefined' ) {
+			return {value, key, label: `Set ${label}`};
 		}
-		return <TextControl
-			label={`Set ${fieldLabel}`}
-			value={value}
-			onChange={value => handleValueChange(value)}
-		/>
-	};
 
-	ControlField = withSelect(
-		(select) => {
-			return select('core/editor').getEditedPostAttribute('meta')[meta_key]
-		}
-	)(ControlField);
+		return {
+			value: value[row_index][property_key],
+			key,
+			label: `Set ${property_key.replace('_', ' ')}`
+		};
+	}
+)(TextControl);
 
-	ControlField = withDispatch(
-		(dispatch) => {
-			return {
-				handleValueChange: (value) => {
-					let newValue = value
-					if(!notRepeaterField) {
-						let repeaterValues = props.repeater_values
-						newValue = repeaterValues.map((row, innerIndex) => {
-							return innerIndex === row_index ? {...row, [property_key]: value} : row
-						})
-					}
-					dispatch('core/editor').editPost({meta: {[meta_key]: newValue}})
+export default withDispatch(
+	(dispatch, props) => {
+		const {meta_key} = props.field;
+		const {row_index,property_key} = props
+
+
+		return {
+			onChange: (value) => {
+				let newValue = value;
+
+				if(typeof row_index !== 'undefined') {
+					let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+					newValue = repeaterValues.map((row, innerIndex) => {
+						return innerIndex === row_index ? {...row, [property_key]: value} : row
+					});
 				}
+				dispatch('core/editor').editPost({meta: {[meta_key]: newValue}});
 			}
 		}
-	)(ControlField);
-
-	return <><ControlField/></>
-}
-export default TextFieldHoc
+	}
+)(ControlField);
