@@ -8,19 +8,22 @@ const TextFieldHoc = (props) => {
 	const row_index = props?.row_index
 	const notRepeaterField = typeof row_index === 'undefined'
 	let ControlField = ({handleValueChange}) => {
-
-
 		let value = ''
 		let fieldLabel = ''
 		if(notRepeaterField) {
 			fieldLabel = field.label
 			value = select('core/editor').getEditedPostAttribute('meta')[meta_key]
 		} else {
+			console.log(meta_key)
 			fieldLabel = property_key.replace('_', ' ')
-			value = select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index][property_key]
+			// if(select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index]){
+				value = select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index][property_key]
+			// } else {
+			// 	value = ''
+			// }
+
 		}
 		return <TextControl
-
 			label={`Set ${fieldLabel}`}
 			value={value}
 			onChange={value => handleValueChange(value)}
@@ -52,6 +55,6 @@ const TextFieldHoc = (props) => {
 		}
 	)(ControlField);
 
-	return <><ControlField/></>
+	return <div><ControlField/></div>
 }
 export default TextFieldHoc
