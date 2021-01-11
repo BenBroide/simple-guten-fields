@@ -8,12 +8,10 @@ const ControlField = withSelect(
 		const value = select('core/editor').getEditedPostAttribute('meta')[meta_key];
 		const key = meta_key + row_index + property_key;
 
-		console.log(row_index)
 		if( typeof row_index === 'undefined' ) {
 			return {value, key, label: `Set ${label}`};
 		}
 
-		console.log(value)
 		return {
 			value: value[row_index][property_key],
 			key,
@@ -24,8 +22,8 @@ const ControlField = withSelect(
 
 export default withDispatch(
 	(dispatch, props) => {
-		const {meta_key, property_key} = props.field;
-		const {row_index} = props
+		const {meta_key} = props.field;
+		const {row_index,property_key} = props
 
 
 		return {
@@ -33,13 +31,11 @@ export default withDispatch(
 				let newValue = value;
 
 				if(typeof row_index !== 'undefined') {
-					console.log(value)
 					let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
 					newValue = repeaterValues.map((row, innerIndex) => {
 						return innerIndex === row_index ? {...row, [property_key]: value} : row
 					});
 				}
-				console.log(newValue)
 				dispatch('core/editor').editPost({meta: {[meta_key]: newValue}});
 			}
 		}

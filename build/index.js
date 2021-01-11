@@ -289,67 +289,62 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _TextControlHoc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TextControlHoc */ "./src/TextControlHoc.js");
+/* harmony import */ var _controlsIndex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./controlsIndex */ "./src/controlsIndex.js");
+
 
 
 var _wp$data = wp.data,
-    withSelect = _wp$data.withSelect,
     select = _wp$data.select,
     withDispatch = _wp$data.withDispatch,
     useSelect = _wp$data.useSelect;
-var TextControl = wp.components.TextControl;
-
 
 var InnerControlComponent = function InnerControlComponent(props) {
+  var _select$getEditedPost;
+
   var key = props.key,
       field = props.field,
       row_index = props.row_index,
       property_key = props.property_key,
-      repeater_record_label = props.repeater_record_label,
-      repeater_values = props.repeater_values,
-      control_index = props.control_index;
-  var ControlField = control_index['text'];
+      repeater_record_label = props.repeater_record_label;
+  var ControlField = _controlsIndex__WEBPACK_IMPORTED_MODULE_2__["default"]['text'];
+  var repeaterValues = (_select$getEditedPost = select('core/editor').getEditedPostAttribute('meta')) === null || _select$getEditedPost === void 0 ? void 0 : _select$getEditedPost[props.meta_key];
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ControlField, {
     key: key,
     field: field,
     row_index: row_index,
     property_key: property_key,
     repeater_record_label: repeater_record_label,
-    repeater_values: repeater_values
+    repeater_values: repeaterValues
   });
 };
 
 var ControlField = function ControlField(_ref) {
   var _show_in_rest$schema, _show_in_rest$schema$;
 
-  var value = _ref.value,
-      handleFieldChange = _ref.handleFieldChange,
-      addItem = _ref.addItem,
+  var addItem = _ref.addItem,
       removeItem = _ref.removeItem,
       field = _ref.field,
       controlsIndex = _ref.controlsIndex;
   var meta_key = field.meta_key,
       label = field.label,
       show_in_rest = field.show_in_rest;
-  console.log(label);
   var properties = show_in_rest === null || show_in_rest === void 0 ? void 0 : (_show_in_rest$schema = show_in_rest.schema) === null || _show_in_rest$schema === void 0 ? void 0 : (_show_in_rest$schema$ = _show_in_rest$schema.items) === null || _show_in_rest$schema$ === void 0 ? void 0 : _show_in_rest$schema$.properties;
   var propertiesKeys = Object.entries(properties).map(function (item) {
     return item[0];
   });
   var repeaterValues = useSelect(function (select) {
-    var _select$getEditedPost;
+    var _select$getEditedPost2;
 
-    return (_select$getEditedPost = select('core/editor').getEditedPostAttribute('meta')) === null || _select$getEditedPost === void 0 ? void 0 : _select$getEditedPost[meta_key];
-  }); // let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
-
-  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("h3", null, "".concat(label), " (Repeater field):"), repeaterValues.map(function (row, index) {
+    return (_select$getEditedPost2 = select('core/editor').getEditedPostAttribute('meta')) === null || _select$getEditedPost2 === void 0 ? void 0 : _select$getEditedPost2[meta_key];
+  });
+  console.log(meta_key);
+  console.log(repeaterValues);
+  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("h3", null, "".concat(label), " (Repeater field):"), Array.isArray(repeaterValues) && repeaterValues.map(function (row, index) {
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
       key: "repeaterValues".concat(index).concat(meta_key)
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("b", null, "Repeater Record ", index + 1, ":")), propertiesKeys.map(function (property_key, innerIndex) {
       var innerField = properties[property_key];
-      innerField.meta_key = meta_key; // let InnerControlField = controlsIndex['text']
-
-      console.log(index + property_key + meta_key);
+      innerField.meta_key = meta_key;
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(InnerControlComponent, {
         key: index + property_key,
         field: innerField,
@@ -358,14 +353,7 @@ var ControlField = function ControlField(_ref) {
         repeater_record_label: "".concat(label, " ").concat(property_key),
         repeater_values: repeaterValues,
         control_index: controlsIndex
-      }); // <TextControl
-      //     key={index + property_key}
-      //     label={`Set ${label} ${property_key} ${index + 1}`}
-      //     value={repeaterValues[index][property_key]}
-      //     onChange={value => {
-      //         handleFieldChange(repeaterValues,index, property_key,value)
-      //     }}
-      // />
+      });
     }), index > 0 && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("button", {
       onClick: function onClick() {
         removeItem(meta_key, index, repeaterValues);
@@ -383,15 +371,6 @@ var ControlField = function ControlField(_ref) {
 
 ControlField = withDispatch(function (dispatch) {
   return {
-    // handleFieldChange: (repeaterValues, index, property_key, value) => {
-    // 	repeaterValues[index] = repeaterValues[index]
-    // 	repeaterValues[index][property_key] = value
-    // 	let repeaterValuesCopy = repeaterValues.splice(0)
-    // 	dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValuesCopy}})
-    // },
-    // handleFieldChange: (value)=>{
-    // 		dispatch('core/editor').editPost({meta: {[meta_key]: value}})
-    // },
     addItem: function addItem(meta_key, repeaterValues) {
       repeaterValues.push({});
       var repeaterValuesCopy = repeaterValues.splice(0);
@@ -401,9 +380,8 @@ ControlField = withDispatch(function (dispatch) {
     },
     removeItem: function removeItem(meta_key, index, repeaterValues) {
       if (confirm("Confirm delete")) {
-        delete repeaterValues[index];
-        repeaterValues = repeaterValues.filter(function (obj) {
-          return typeof obj !== 'undefined';
+        repeaterValues = repeaterValues.filter(function (obj, loopIndex) {
+          return loopIndex !== index;
         });
         dispatch('core/editor').editPost({
           meta: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, meta_key, repeaterValues)
@@ -496,9 +474,6 @@ var SelectControlHoc = function SelectControlHoc(_ref) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -511,65 +486,82 @@ var _wp$data = wp.data,
     withDispatch = _wp$data.withDispatch,
     useSelect = _wp$data.useSelect;
 var TextControl = wp.components.TextControl;
+var ControlField = withSelect(function (select, props) {
+  var _props$field = props.field,
+      label = _props$field.label,
+      meta_key = _props$field.meta_key;
+  var row_index = props.row_index,
+      property_key = props.property_key;
+  var value = select('core/editor').getEditedPostAttribute('meta')[meta_key];
+  var key = meta_key + row_index + property_key;
 
-var TextFieldHoc = function TextFieldHoc(props) {
-  var field = props.field;
-  var meta_key = field.meta_key;
-  var property_key = props === null || props === void 0 ? void 0 : props.property_key;
-  var row_index = props === null || props === void 0 ? void 0 : props.row_index;
-  var notRepeaterField = typeof row_index === 'undefined';
-
-  var ControlField = function ControlField(_ref) {
-    var handleValueChange = _ref.handleValueChange;
-    var value = '';
-    var fieldLabel = '';
-
-    if (notRepeaterField) {
-      fieldLabel = field.label;
-      value = select('core/editor').getEditedPostAttribute('meta')[meta_key];
-    } else {
-      console.log(meta_key);
-      fieldLabel = property_key.replace('_', ' '); // if(select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index]){
-
-      value = select('core/editor').getEditedPostAttribute('meta')[meta_key][row_index][property_key]; // } else {
-      // 	value = ''
-      // }
-    }
-
-    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
-      label: "Set ".concat(fieldLabel),
-      value: value,
-      onChange: function onChange(value) {
-        return handleValueChange(value);
-      }
-    });
-  };
-
-  ControlField = withSelect(function (select) {
-    return select('core/editor').getEditedPostAttribute('meta')[meta_key];
-  })(ControlField);
-  ControlField = withDispatch(function (dispatch) {
+  if (typeof row_index === 'undefined') {
     return {
-      handleValueChange: function handleValueChange(value) {
-        var newValue = value;
+      value: value,
+      key: key,
+      label: "Set ".concat(label)
+    };
+  }
 
-        if (!notRepeaterField) {
-          var repeaterValues = props.repeater_values;
-          newValue = repeaterValues.map(function (row, innerIndex) {
-            return innerIndex === row_index ? _objectSpread(_objectSpread({}, row), {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, property_key, value)) : row;
-          });
-        }
+  return {
+    value: value[row_index][property_key],
+    key: key,
+    label: "Set ".concat(property_key.replace('_', ' '))
+  };
+})(TextControl);
+/* harmony default export */ __webpack_exports__["default"] = (withDispatch(function (dispatch, props) {
+  var meta_key = props.field.meta_key;
+  var row_index = props.row_index,
+      property_key = props.property_key;
+  return {
+    onChange: function onChange(value) {
+      var newValue = value;
 
-        dispatch('core/editor').editPost({
-          meta: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, meta_key, newValue)
+      if (typeof row_index !== 'undefined') {
+        var _select$getEditedPost;
+
+        var repeaterValues = (_select$getEditedPost = select('core/editor').getEditedPostAttribute('meta')) === null || _select$getEditedPost === void 0 ? void 0 : _select$getEditedPost[meta_key];
+        newValue = repeaterValues.map(function (row, innerIndex) {
+          return innerIndex === row_index ? _objectSpread(_objectSpread({}, row), {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, property_key, value)) : row;
         });
       }
-    };
-  })(ControlField);
-  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ControlField, null));
-};
 
-/* harmony default export */ __webpack_exports__["default"] = (TextFieldHoc);
+      dispatch('core/editor').editPost({
+        meta: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, meta_key, newValue)
+      });
+    }
+  };
+})(ControlField));
+
+/***/ }),
+
+/***/ "./src/controlsIndex.js":
+/*!******************************!*\
+  !*** ./src/controlsIndex.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TextControlHoc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TextControlHoc */ "./src/TextControlHoc.js");
+/* harmony import */ var _ColorPickerHoc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ColorPickerHoc */ "./src/ColorPickerHoc.js");
+/* harmony import */ var _SelectControlHoc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SelectControlHoc */ "./src/SelectControlHoc.js");
+/* harmony import */ var _MediaUploadHoc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MediaUploadHoc */ "./src/MediaUploadHoc.js");
+/* harmony import */ var _RepeaterControlHoc__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./RepeaterControlHoc */ "./src/RepeaterControlHoc.js");
+
+
+
+
+
+var controlsIndex = {
+  text: _TextControlHoc__WEBPACK_IMPORTED_MODULE_0__["default"],
+  color: _ColorPickerHoc__WEBPACK_IMPORTED_MODULE_1__["default"],
+  select: _SelectControlHoc__WEBPACK_IMPORTED_MODULE_2__["default"],
+  media: _MediaUploadHoc__WEBPACK_IMPORTED_MODULE_3__["default"],
+  repeater: _RepeaterControlHoc__WEBPACK_IMPORTED_MODULE_4__["default"]
+};
+/* harmony default export */ __webpack_exports__["default"] = (controlsIndex);
 
 /***/ }),
 

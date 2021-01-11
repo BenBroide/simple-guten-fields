@@ -1,19 +1,13 @@
-import TextFieldHoc from "./TextControlHoc";
 import controlsIndex from "./controlsIndex";
-const {withSelect, select, withDispatch, useSelect} = wp.data
-// const {useMemo} from wp.element
-const {TextControl} = wp.components
+const {select, withDispatch, useSelect} = wp.data
+
 
 
 
 const InnerControlComponent = props => {
-	const {key, field, row_index, property_key, repeater_record_label, repeater_values} = props
+	const {key, field, row_index, property_key, repeater_record_label} = props
 	let ControlField = controlsIndex['text']
-	let repeaterValues = useSelect(
-		select => select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
-	);
-	// let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
-	// return useMemo(() => {
+	let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
 		return <ControlField key={key}
 					  field={field}
 					  row_index={row_index}
@@ -21,20 +15,16 @@ const InnerControlComponent = props => {
 					  repeater_record_label={repeater_record_label}
 					  repeater_values={repeaterValues}
 		/>
-	// },[])
 }
 
-let ControlField = ({value, handleFieldChange, addItem, removeItem, field, controlsIndex}) => {
+let ControlField = ({ addItem, removeItem, field, controlsIndex}) => {
 	const {meta_key, label, show_in_rest} = field
-	console.log(label)
 
 	const properties = show_in_rest?.schema?.items?.properties
 	let propertiesKeys = Object.entries(properties).map(item => item[0])
 	let repeaterValues = useSelect(
 		select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
 	);
-	console.log(repeaterValues)
-	// let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
 	return <>
 		<h3>{`${label}`} (Repeater field):</h3>
 		{Array.isArray(repeaterValues) && repeaterValues.map((row, index) => {
@@ -43,8 +33,6 @@ let ControlField = ({value, handleFieldChange, addItem, removeItem, field, contr
 				{propertiesKeys.map((property_key, innerIndex) => {
 					let innerField = properties[property_key]
 					innerField.meta_key = meta_key
-					// let InnerControlField = controlsIndex['text']
-					console.log(index + property_key + meta_key)
 					return <InnerControlComponent
 						key={index + property_key}
 						field={innerField}
@@ -54,15 +42,6 @@ let ControlField = ({value, handleFieldChange, addItem, removeItem, field, contr
 						repeater_values={repeaterValues}
 						control_index={controlsIndex}
 					/>
-
-					// <TextControl
-					//     key={index + property_key}
-					//     label={`Set ${label} ${property_key} ${index + 1}`}
-					//     value={repeaterValues[index][property_key]}
-					//     onChange={value => {
-					//         handleFieldChange(repeaterValues,index, property_key,value)
-					//     }}
-					// />
 				})}
 				{index > 0 && <button onClick={() => {
 					removeItem(meta_key, index, repeaterValues)
@@ -84,15 +63,6 @@ let ControlField = ({value, handleFieldChange, addItem, removeItem, field, contr
 ControlField = withDispatch(
 	(dispatch) => {
 		return {
-			// handleFieldChange: (repeaterValues, index, property_key, value) => {
-			// 	repeaterValues[index] = repeaterValues[index]
-			// 	repeaterValues[index][property_key] = value
-			// 	let repeaterValuesCopy = repeaterValues.splice(0)
-			// 	dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValuesCopy}})
-			// },
-			// handleFieldChange: (value)=>{
-			// 		dispatch('core/editor').editPost({meta: {[meta_key]: value}})
-			// },
 			addItem: (meta_key, repeaterValues) => {
 				repeaterValues.push({})
 				let repeaterValuesCopy = repeaterValues.splice(0)
@@ -101,8 +71,7 @@ ControlField = withDispatch(
 			},
 			removeItem: (meta_key, index, repeaterValues) => {
 				if(confirm("Confirm delete")) {
-					delete repeaterValues[index]
-					repeaterValues = repeaterValues.filter(obj => typeof obj !== 'undefined')
+					repeaterValues = repeaterValues.filter((obj,loopIndex) => loopIndex !== index)
 					dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValues}})
 				}
 
