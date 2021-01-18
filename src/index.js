@@ -1,18 +1,18 @@
 import {registerPlugin} from '@wordpress/plugins';
 import {PluginDocumentSettingPanel} from '@wordpress/edit-post';
-import TextFieldHoc from './TextControlHoc'
-import SelectControlHoc from './SelectControlHoc'
-import ColorPickerHoc from './ColorPickerHoc'
-import MediaUploadHoc from './MediaUploadHoc'
-import RepeaterControlHoc from './RepeaterControlHoc'
+import TextFieldHoc from './TextControl'
+import SelectControl from './SelectControl'
+import ColorPicker from './ColorPicker'
+import MediaUploadHoc from './MediaUpload'
+import RepeaterControl from './RepeaterControl'
 
 const controlsIndex =
 	{
 		text: TextFieldHoc,
-		color: ColorPickerHoc,
-		select: SelectControlHoc,
+		color: ColorPicker,
+		select: SelectControl,
 		media: MediaUploadHoc,
-		repeater: RepeaterControlHoc
+		repeater: RepeaterControl
 	}
 
 const CustomFieldsPanel = () => {
