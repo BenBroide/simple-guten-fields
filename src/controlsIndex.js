@@ -1,15 +1,15 @@
-import TextFieldHoc from "./TextControlHoc";
-import ColorPickerHoc from "./ColorPickerHoc";
-import SelectControlHoc from "./SelectControlHoc";
-import MediaUploadHoc from "./MediaUploadHoc";
-import RepeaterControlHoc from "./RepeaterControlHoc";
+import TextField from "./TextControl";
+import ColorPickerComponent from "./ColorPicker";
+import SelectControlComponent from "./SelectControl";
+import MediaUpload from "./MediaUpload";
+import RepeaterControl from "./RepeaterControl";
 
 const controlsIndex =
 	{
-		text: TextFieldHoc,
-		color: ColorPickerHoc,
-		select: SelectControlHoc,
-		media: MediaUploadHoc,
-		repeater: RepeaterControlHoc
+		text: TextField,
+		color: ColorPickerComponent,
+		select: SelectControlComponent,
+		media: MediaUpload,
+		repeater: RepeaterControl
 	}
 	export default controlsIndex

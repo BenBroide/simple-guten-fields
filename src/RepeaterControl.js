@@ -80,8 +80,8 @@ ControlField = withDispatch(
 	}
 )(ControlField);
 
-const RepeaterControlHoc = ({field, controlsIndex}) => {
+const RepeaterControl = ({field, controlsIndex}) => {
 	return <><ControlField field={field} controlsIndex={controlsIndex}/></>
 }
 
-export default RepeaterControlHoc
+export default RepeaterControl

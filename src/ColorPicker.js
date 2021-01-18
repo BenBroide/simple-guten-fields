@@ -2,7 +2,7 @@ const {withSelect, withDispatch, select} = wp.data
 const {ColorPicker} = wp.components
 import {withState} from '@wordpress/compose';
 
-const ColorPickerHoc = ({field}) => {
+const ColorPickerComponent = ({field}) => {
 	const {meta_key,label} = field
 
 	let FieldControl = withState({
@@ -48,4 +48,4 @@ const ColorPickerHoc = ({field}) => {
 
 	return <><FieldControl/></>
 }
-export default ColorPickerHoc
+export default ColorPickerComponent

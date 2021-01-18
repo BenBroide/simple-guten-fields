@@ -2,7 +2,7 @@ const {withSelect, withDispatch, select} = wp.data
 const {SelectControl} = wp.components
 
 
-const SelectControlHoc = ({field}) => {
+const SelectControlComponent = ({field}) => {
 	const {meta_key, options,label} = field
 
 	let SelectControlField = ({value, handleSelectChange}) => (
@@ -34,4 +34,4 @@ const SelectControlHoc = ({field}) => {
 	return <><SelectControlField/></>
 }
 
-export default SelectControlHoc
+export default SelectControlComponent

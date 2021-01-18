@@ -17,7 +17,7 @@ const ImagePlaceholder = () => (
 	}}>SET IMAGE</div>
 )
 
-const mediaUploadHoc = ({field}) => {
+const mediaUpload = ({field}) => {
 	let {meta_key, label} = field
 	const imageId = useSelect(
 		select => select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
@@ -52,4 +52,4 @@ const mediaUploadHoc = ({field}) => {
 		</div>
 	);
 }
-export default mediaUploadHoc
+export default mediaUpload
