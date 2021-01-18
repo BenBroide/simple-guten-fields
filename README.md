@@ -48,5 +48,12 @@ In the resources below you can more about `register_post_meta` and `show_in_rest
   
 The file ```register-fields.php``` contains examples for all fields
 
+### Develoment 
+
+```npm install``` in root folder
+```npm run start``` for develpoment
+```npm run build``` for build
+
+The node commands are based on [wp scripts create block](https://developer.wordpress.org/block-editor/packages/packages-create-block/) 
 ### Experimental concept
 This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not the plugin as is on a live site.
