@@ -1,4 +1,5 @@
 <?php
+// Uncomment next line to show post demo fields
 //add_filter( 'sgf_register_fields', 'sgf_post_fields' );
 
 // Register operator fields
