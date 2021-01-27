@@ -24,6 +24,7 @@ const ColorPickerComponent = ({field}) => {
 						handleValueChange(value)
 					}}
 				/>}
+				<button onClick={()=>handleValueChange({hex: ''})}>Remove Color</button>
 			</div>
 		)
 	});

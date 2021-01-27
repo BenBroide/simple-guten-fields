@@ -171,7 +171,13 @@ var ColorPickerComponent = function ColorPickerComponent(_ref) {
       onChangeComplete: function onChangeComplete(value) {
         handleValueChange(value);
       }
-    }));
+    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("button", {
+      onClick: function onClick() {
+        return handleValueChange({
+          hex: ''
+        });
+      }
+    }, "Remove Color"));
   });
   FieldControl = withSelect(function (select) {
     return _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, meta_key, select('core/editor').getEditedPostAttribute('meta')[meta_key]);
