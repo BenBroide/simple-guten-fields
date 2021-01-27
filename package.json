@@ -15,5 +15,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^12.6.0"
+	},
+	"dependencies": {
+		"react-select": "^4.0.2"
 	}
 }

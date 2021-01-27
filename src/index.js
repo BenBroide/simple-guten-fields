@@ -1,21 +1,7 @@
 import {registerPlugin} from '@wordpress/plugins';
 import {PluginDocumentSettingPanel} from '@wordpress/edit-post';
-import TextField from './TextControl'
-import TextareaField from './TextareaControl'
-import SelectControl from './SelectControl'
-import ColorPicker from './ColorPicker'
-import MediaUploadHoc from './MediaUpload'
-import RepeaterControl from './RepeaterControl'
 
-const controlsIndex =
-	{
-		text: TextField,
-		textarea : TextareaField,
-		color: ColorPicker,
-		select: SelectControl,
-		media: MediaUploadHoc,
-		repeater: RepeaterControl
-	}
+import controlsIndex from './controlsIndex'
 
 const CustomFieldsPanel = () => {
 

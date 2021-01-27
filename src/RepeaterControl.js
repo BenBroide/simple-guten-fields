@@ -1,12 +1,10 @@
 import controlsIndex from "./controlsIndex";
 const {select, withDispatch, useSelect} = wp.data
 
-
-
-
 const InnerControlComponent = props => {
 	const {key, field, row_index, property_key, repeater_record_label} = props
-	let ControlField = controlsIndex['text']
+	let controlFieldKey = field.control ?? 'text'
+	let ControlField = controlsIndex[controlFieldKey]
 	let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[props.meta_key]
 		return <ControlField key={key}
 					  field={field}
