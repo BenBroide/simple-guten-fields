@@ -1,5 +1,5 @@
 <?php
-add_filter( 'sgf_register_fields', 'sgf_post_fields' );
+//add_filter( 'sgf_register_fields', 'sgf_post_fields' );
 
 // Register operator fields
 function sgf_post_fields( $fields_array ) {
