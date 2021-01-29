@@ -5,6 +5,7 @@ Simple Guten Fields is a concept for developers how to add custom fields to Gute
 Get started:
 * Install the plugin via zip file or git clone to ```wp-content/plugins``` folder
 * Activate Plugin
+* To view the demo fields in post type "post" uncomment line 3 in the file "register-fields.php" ```//add_filter( 'sgf_register_fields', 'sgf_post_fields' );```
 
 In post type "post" editor rigth sidebar should now appear new panels with fields matching the fields set in ```register-fields.php```.
 
