@@ -8788,12 +8788,14 @@ var ControlField = withSelect(function (select, props) {
 
       var arrayItemProperties = props === null || props === void 0 ? void 0 : (_props$field2 = props.field) === null || _props$field2 === void 0 ? void 0 : (_props$field2$show_in = _props$field2.show_in_rest) === null || _props$field2$show_in === void 0 ? void 0 : (_props$field2$show_in2 = _props$field2$show_in.schema) === null || _props$field2$show_in2 === void 0 ? void 0 : (_props$field2$show_in3 = _props$field2$show_in2.items) === null || _props$field2$show_in3 === void 0 ? void 0 : _props$field2$show_in3.properties;
       var arrayItemKey = Object.keys(arrayItemProperties)[0];
+      var lookInOptions = item[arrayItemKey];
       var labelOption = options.find(function (propOption) {
-        return propOption.value === item[arrayItemKey];
+        return propOption.value === lookInOptions;
       });
       var label = labelOption ? labelOption.label : item[arrayItemKey];
+      var val = item[arrayItemKey];
       return {
-        value: value[arrayItemKey],
+        value: val,
         label: label
       };
     }) : [];
@@ -8836,6 +8838,7 @@ ControlField = withDispatch(function (dispatch, props) {
       property_key = props.property_key;
   return {
     onChange: function onChange(value) {
+      console.log(value);
       var flatArray = value.map ? value.map(function (option) {
         return option.value;
       }) : [value.value];
@@ -9255,22 +9258,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _controlsIndex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./controlsIndex */ "./src/controlsIndex.js");
 
 
- // import TextField from './TextControl'
-// import TextareaField from './TextareaControl'
-// import SelectControl from './SelectControl'
-// import ColorPicker from './ColorPicker'
-// import MediaUploadHoc from './MediaUpload'
-// import RepeaterControl from './RepeaterControl'
 
- // const controlsIndex =
-// 	{
-// 		text: TextField,
-// 		textarea : TextareaField,
-// 		color: ColorPicker,
-// 		select: SelectControl,
-// 		media: MediaUploadHoc,
-// 		repeater: RepeaterControl
-// 	}
+
 
 var CustomFieldsPanel = function CustomFieldsPanel() {
   var fields = window.sgf_data.fields;
@@ -9281,6 +9270,8 @@ var CustomFieldsPanel = function CustomFieldsPanel() {
   }).includes(currentCpt)) {
     return null;
   }
+
+  console.log(currentCpt);
 
   if (fields) {
     fields = fields.filter(function (field) {
@@ -9293,6 +9284,7 @@ var CustomFieldsPanel = function CustomFieldsPanel() {
   }).filter(function (item, i, array) {
     return array.indexOf(item) === i;
   });
+  console.log(panels);
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", null, panels.map(function (panel, panelIndex) {
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
       key: panelIndex

@@ -15,14 +15,19 @@ let ControlField = withSelect(
 
         if(typeof row_index === 'undefined') {
             defaultValue = []
+
             defaultValue = Array.isArray(value) ? value.map(item => {
                 let arrayItemProperties = props?.field?.show_in_rest?.schema?.items?.properties;
                 let arrayItemKey = Object.keys(arrayItemProperties)[0];
 
-                let labelOption = options.find(propOption => propOption.value === item[arrayItemKey])
+                let lookInOptions = item[arrayItemKey]
+
+                let labelOption = options.find(propOption => propOption.value === lookInOptions)
                 let label = labelOption ? labelOption.label : item[arrayItemKey]
 
-                return {value: value[arrayItemKey], label: label}
+                let val = item[arrayItemKey]
+
+                return {value: val, label: label}
             }) : []
         } else {
             defaultValue = value[row_index] && Array.isArray(value[row_index][property_key]) ? value[row_index][property_key].map(option => {
@@ -54,6 +59,7 @@ ControlField = withDispatch(
 
         return {
             onChange: (value) => {
+                console.log(value)
                 let flatArray = value.map ? value.map(option => option.value) : [value.value]
                 let newValue
                 if(typeof row_index !== 'undefined') {
