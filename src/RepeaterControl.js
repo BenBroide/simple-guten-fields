@@ -1,8 +1,8 @@
 import InnerControlComponent from "./InnerControlComponent";
-const {select, withDispatch, useSelect} = wp.data
+const { withDispatch, useSelect } = wp.data
 
 let ControlField = ({ addItem, removeItem, field, controlsIndex, property_key, row_index}) => {
-	const {meta_key, label, show_in_rest, parent} = field
+	const { meta_key, label, show_in_rest, parent } = field
 
 	const properties = show_in_rest?.schema?.items?.properties
 	let propertiesKeys = Object.entries(properties).map(item => item[0])
@@ -16,7 +16,7 @@ let ControlField = ({ addItem, removeItem, field, controlsIndex, property_key, r
 		{Array.isArray(loopRepeaterValues) && loopRepeaterValues.map((row, index) => {
 			return <div key={`repeaterValues${index}${meta_key}`}>
 				<div><b>Repeater Record {index + 1}:</b></div>
-				{propertiesKeys.map((propertyKey, innerIndex) => {
+				{propertiesKeys.map((propertyKey) => {
 					let innerField = properties[propertyKey]
 					innerField.meta_key = meta_key
 					return <InnerControlComponent
@@ -80,8 +80,8 @@ ControlField = withDispatch(
 						repeaterValues[row_index][property_key] = repeaterValues[row_index][property_key].filter((obj,loopIndex) => loopIndex !== index)
 					}
 
-					repeaterValues = JSON.parse(JSON.stringify(repeaterValues));
-					dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValues}})
+					const repeaterValuesCopy = repeaterValues.splice(0)
+					dispatch('core/editor').editPost({meta: {[meta_key]: repeaterValuesCopy}})
 				}
 
 			}

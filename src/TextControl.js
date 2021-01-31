@@ -1,16 +1,16 @@
-const {withSelect, select, withDispatch, useSelect} = wp.data
-const {TextControl} = wp.components
+const { withSelect, select, withDispatch } = wp.data
+const { TextControl } = wp.components
 
 const ControlField = withSelect(
 	(select, props) => {
-		const {  label, meta_key} = props.field;
+		const { label, meta_key } = props.field;
 
-		const {row_index,property_key, parent_row_index, parent_property_key} = props
+		const { row_index,property_key, parent_row_index, parent_property_key } = props
 		const value = select('core/editor').getEditedPostAttribute('meta')[meta_key];
 		const key = meta_key + row_index + property_key;
 
 		if( typeof row_index === 'undefined' ) {
-			return {value, key, label: `Set ${label}`};
+			return { value, key, label: `Set ${label}` };
 		}
 
 		const returnedValue = props.parent ? value[row_index][property_key] : value[parent_row_index][parent_property_key][row_index][property_key];
@@ -25,8 +25,8 @@ const ControlField = withSelect(
 
 export default withDispatch(
 	(dispatch, props) => {
-		const {meta_key} = props.field;
-		const {row_index,property_key, parent, parent_row_index, parent_property_key} = props
+		const { meta_key } = props.field;
+		const { row_index,property_key, parent, parent_row_index, parent_property_key } = props
 
 		return {
 			onChange: (value) => {
@@ -40,13 +40,13 @@ export default withDispatch(
 							return innerIndex === row_index ? {...row, [property_key]: value} : row
 						});
 					} else {
-						const foo = repeaterValues[parent_row_index][parent_property_key].map((row, innerIndex) => {
+						repeaterValues[parent_row_index][parent_property_key] = repeaterValues[parent_row_index][parent_property_key].map((row, innerIndex) => {
 							return innerIndex === row_index ? {...row, [property_key]: value} : row
 						});
 
-						newValue = [ ...repeaterValues ];
-						newValue[parent_row_index][parent_property_key] = foo;
+						newValue = repeaterValues.splice(0);
 					}
+
 				}
 				dispatch('core/editor').editPost({meta: {[meta_key]: newValue}});
 			}
