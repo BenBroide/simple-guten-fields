@@ -1,58 +1,136 @@
 <?php
-/**
- * Plugin Name:     Simple Guten Fields
- * Description:     Simple Guten Fields is a concept of adding custom fields to Gutenberg editor.
- */
-include ('register-fields.php');
-function sgf_load_scripts() {
-	$dir = __DIR__;
+// Uncomment next line to show post demo fields
+add_filter( 'sgf_register_fields', 'sgf_post_fields' );
 
-	$script_asset_path = "$dir/build/index.asset.php";
-	if ( ! file_exists( $script_asset_path ) ) {
-		throw new Error(
-			'You need to run `npm start` or `npm run build` for the "create-block/simple-guten-fields" block first.'
-		);
-	}
-	$index_js     = 'build/index.js';
-	$script_asset = require( $script_asset_path );
-	wp_register_script(
-		'sgf-script',
-		plugins_url( $index_js, __FILE__ ),
-		$script_asset['dependencies'],
-		$script_asset['version']
-	);
-
-	$fields = apply_filters( 'sgf_register_fields', [] );
-	$data   = [
-		'fields'      => $fields,
+// Register operator fields
+function sgf_post_fields( $fields_array ) {
+//Simple text field
+	$fields_array[] = [
+		'meta_key' => 'publisher',
 	];
-	wp_localize_script( 'sgf-script', 'sgf_data', $data );
 
-	wp_enqueue_script('sgf-script');
+// Number field with default
+	$fields_array[] = [
+		'meta_key' => 'sales',
+		'type'     => 'number',
+		'default'  => 100,
+	];
+
+// Select with default
+
+	$month_options = array_map( function ( $value ) {
+		$label = date( 'F', strtotime( date( 'Y' ) . "-" . str_pad( $value, 2, '0', STR_PAD_LEFT ) . "-01" ) );
+
+		return [ 'value' => $value, 'label' => $label ];
+	}, range( 1, 12 ) );
+
+	$fields_array[] = [
+		'meta_key' => 'month',
+		'default'  => (int) date( 'F' ),
+		'control'  => 'select',
+		'options'  => $month_options,
+		'type'     => 'number',
+	];
+
+// Simple repeater
+	$fields_array[] = [
+		'meta_key'     => 'books',
+		'control'      => 'repeater',
+		'type'         => 'array',
+		'parent'       => true,
+		'default'      => [
+		    [
+                'title'        => '',
+                'url'          => '',
+                 'site_name'   => '',
+                 'other_links' => [
+                    [
+                        'link_title' => '',
+                        'link'       => '',
+                    ]
+                ]
+            ]
+        ],
+		'show_in_rest' => [
+			'schema' => [
+				'items' => [
+					'type'       => 'object',
+					'properties' => [
+						'title'  => [
+							'type' => 'string',
+						],
+						'url'    => [
+                            'type' => 'string',
+                        ],
+                        'site_name' => [
+                            'type' => 'string',
+                        ],
+                        'other_links' => [
+                            'type'    => 'array',
+                            'control' => 'repeater',
+                            'default' => [ [ 'link_title' => '' ] ],
+                            'show_in_rest' => [
+                                'schema' => [
+                                    'items' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'link_title' => [
+                                                'type' => 'string',
+                                            ],
+                                            'link' => [
+                                                'type' => 'string',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ]
+                        ]
+					],
+				],
+			],
+		],
+	];
+
+// Color fields in separate panel
+	$fields_array[] = [
+		'meta_key' => 'footer_override_color',
+		'control'  => 'color',
+		'panel'    => 'override_styles',
+	];
+	$fields_array[] = [
+		'meta_key' => 'sidebar_override_color',
+		'control'  => 'color',
+		'panel'    => 'override_styles',
+	];
+
+// Image field in separate panel
+	$fields_array[] = [
+		'meta_key' => 'footer_override_background_image',
+		'type'     => 'integer',
+		'default'  => 0,
+		'control'  => 'media',
+		'panel'    => 'override_background_image',
+	];
+
+	$fields_array[] = [
+		'meta_key' => 'sidebar_override_background_image',
+		'type'     => 'integer',
+		'default'  => 0,
+		'control'  => 'media',
+		'panel'    => 'override_background_image',
+	];
+
+	$fields_array = array_map( function ( $field ) {
+		$field['post_type'] = $field['post_type'] ?? 'post';
+		$field['control']   = $field['control'] ?? 'text';
+		$field['panel']     = $field['panel'] ?? 'custom-fields';
+		$field['label']     = ucfirst( str_replace( '_', ' ', $field['meta_key'] ) );
+
+		return $field;
+	}, $fields_array );
+
+	return $fields_array;
 }
-add_action( 'admin_enqueue_scripts', 'sgf_load_scripts' );
-
-function sgf_meta_fields() {
-	$fields_array = apply_filters( 'sgf_register_fields', [] );
-	foreach ( $fields_array as $field ) {
-
-		// Ensure post type exists and field name is valid
-		if ( ! $field['post_type'] || ! post_type_exists( $field['post_type'] ) || ! $field['meta_key'] || ! is_string( $field['meta_key'] ) ) {
-			return;
-		}
 
 
-		// Using Null Coalesce Operator to set defaults
-		register_post_meta( $field['post_type'], $field['meta_key'], [
-			'type'         => $field['type'] ?? 'string',
-			'single'       => $field['single'] ?? true,
-			'default'      => $field['default'] ?? '',
-			'show_in_rest' => $field['show_in_rest'] ?? true,
-			'control'      => $field['control'] ?? 'text'
-		] );
 
-	}
-
-}
-
-add_action( 'rest_api_init', 'sgf_meta_fields' , 0);
