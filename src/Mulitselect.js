@@ -2,6 +2,9 @@ import MultiSelect from 'react-select'
 
 const {withSelect, select, withDispatch} = wp.data
 
+const isRepeater = (rowIndex) => {
+    return typeof rowIndex !== 'undefined'
+}
 let ControlField = withSelect(
     (select, props) => {
 
@@ -12,43 +15,36 @@ let ControlField = withSelect(
         let isMultiProp = isMulti ?? true
 
         let defaultValue = []
+        // Setting labels by the options array
 
-        if(typeof row_index === 'undefined') {
+        if(!isRepeater(row_index)) {
+            // If not inside repeater label is value, value is the array
             defaultValue = []
-
-            defaultValue = Array.isArray(value) ? value.map(item => {
-                let arrayItemProperties = props?.field?.show_in_rest?.schema?.items?.properties;
-                let arrayItemKey = Object.keys(arrayItemProperties)[0];
-
-                let lookInOptions = item[arrayItemKey]
-
-                let labelOption = options.find(propOption => propOption.value === lookInOptions)
-                let label = labelOption ? labelOption.label : item[arrayItemKey]
-
-                let val = item[arrayItemKey]
-
-                return {value: val, label: label}
+            defaultValue = Array.isArray(value) ? value.map(arrayItem => {
+                let isOption = options.find(option => option.value == arrayItem)
+                let label = value
+                if(typeof isOption === 'object' && isOption !== null) {
+                    label = isOption.label
+                }
+                return {value: arrayItem, label: label}
             }) : []
+            return {isMulti: isMultiProp, placeholder: label, defaultValue, key, options, label: `Set ${label}`};
         } else {
-            defaultValue = value[row_index] && Array.isArray(value[row_index][property_key]) ? value[row_index][property_key].map(option => {
-                let labelOption = options.find(propOption => propOption.value === option)
+            // Inside repeater we fetching the value by row index
+            defaultValue = value[row_index][property_key] && Array.isArray(value[row_index][property_key]) ? value[row_index][property_key].map(option => {
+                let labelOption = options.find(propOption => propOption.value == option)
                 let label = labelOption ? labelOption.label : option
                 return {value: option, label: label}
             }) : []
+            return {
+                placeholder: label,
+                isMulti: isMultiProp,
+                defaultValue,
+                key,
+                options,
+                label: `Set ${label}`
+            };
         }
-
-        if(typeof row_index === 'undefined') {
-            return {isMulti: isMultiProp, placeholder: label, defaultValue, key, options, label: `Set ${label}`};
-        }
-
-        return {
-            placeholder: label,
-            isMulti: isMultiProp,
-            defaultValue,
-            key,
-            options,
-            label: `Set ${property_key.replace('_', ' ')}`
-        };
     }
 )(MultiSelect);
 
@@ -59,23 +55,23 @@ ControlField = withDispatch(
 
         return {
             onChange: (value) => {
-                console.log(value)
-                let flatArray = value.map ? value.map(option => option.value) : [value.value]
-                let newValue
-                if(typeof row_index !== 'undefined') {
+                let flatArray = []
+                if(Array.isArray(value)) {
+                    flatArray = value.map(option => option.value)
+                } else {
+                    // When is multi false we saving the value in array of 1 item to beep the data type array
+                    flatArray = [value.value]
+                }
+
+                let newValue = flatArray
+                // In repeater fields we setting the value on the parent meta value before update
+                if(isRepeater(row_index)) {
                     let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
                     newValue = repeaterValues.map((row, innerIndex) => {
 
-                        return innerIndex === row_index ? {...row, [property_key]: flatArray} : row
+                        return innerIndex === row_index ? {...row, [property_key]: newValue} : row
                     });
-                } else {
-                    let arrayItemProperties = props?.field?.show_in_rest?.schema?.items?.properties;
-                    let arrayItemKey = Object.keys(arrayItemProperties)[0];
-                    newValue = flatArray.map(val => {
-                        return {[arrayItemKey]: val}
-                    })
                 }
-
                 dispatch('core/editor').editPost({meta: {[meta_key]: newValue}});
             }
         }

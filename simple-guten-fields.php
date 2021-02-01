@@ -3,7 +3,7 @@
  * Plugin Name:     Simple Guten Fields
  * Description:     Simple Guten Fields is a concept of adding custom fields to Gutenberg editor.
  */
-include ('register-fields.php');
+include( 'register-fields.php' );
 function sgf_load_scripts() {
 	$dir = __DIR__;
 
@@ -24,12 +24,13 @@ function sgf_load_scripts() {
 
 	$fields = apply_filters( 'sgf_register_fields', [] );
 	$data   = [
-		'fields'      => $fields,
+		'fields' => $fields,
 	];
 	wp_localize_script( 'sgf-script', 'sgf_data', $data );
 
-	wp_enqueue_script('sgf-script');
+	wp_enqueue_script( 'sgf-script' );
 }
+
 add_action( 'admin_enqueue_scripts', 'sgf_load_scripts' );
 
 function sgf_meta_fields() {
@@ -43,16 +44,19 @@ function sgf_meta_fields() {
 
 
 		// Using Null Coalesce Operator to set defaults
-		register_post_meta( $field['post_type'], $field['meta_key'], [
-			'type'         => $field['type'] ?? 'string',
-			'single'       => $field['single'] ?? true,
-			'default'      => $field['default'] ?? '',
-			'show_in_rest' => $field['show_in_rest'] ?? true,
-			'control'      => $field['control'] ?? 'text'
-		] );
+		register_post_meta(
+			$field['post_type'],
+			$field['meta_key'],
+			[
+				'type'         => $field['type'] ?? 'string',
+				'single'       => $field['single'] ?? true,
+				'default'      => $field['default'] ?? '',
+				'show_in_rest' => $field['show_in_rest'] ?? true,
+				'control'      => $field['control'] ?? 'text'
+			] );
 
 	}
 
 }
 
-add_action( 'rest_api_init', 'sgf_meta_fields' , 0);
+add_action( 'rest_api_init', 'sgf_meta_fields', 0 );

@@ -1,22 +1,22 @@
 <?php
-// Uncomment next line to show post demo fields
+// Uncomment next line to show post demo fields in post type "Post"
 //add_filter( 'sgf_register_fields', 'sgf_post_fields' );
 
 // Register operator fields
 function sgf_post_fields( $fields_array ) {
-//Simple text field
+	//Simple text field
 	$fields_array[] = [
 		'meta_key' => 'publisher',
 	];
 
-// Number field with default
+	// Number field with default
 	$fields_array[] = [
 		'meta_key' => 'sales',
 		'type'     => 'number',
 		'default'  => 100,
 	];
 
-// Select with default
+	// Select with default
 
 	$month_options = array_map( function ( $value ) {
 		$label = date( 'F', strtotime( date( 'Y' ) . "-" . str_pad( $value, 2, '0', STR_PAD_LEFT ) . "-01" ) );
@@ -32,7 +32,7 @@ function sgf_post_fields( $fields_array ) {
 		'type'     => 'number',
 	];
 
-// Simple repeater
+	// Simple repeater
 	$fields_array[] = [
 		'meta_key'     => 'books',
 		'control'      => 'repeater',
@@ -52,7 +52,7 @@ function sgf_post_fields( $fields_array ) {
 		],
 	];
 
-// Repeater with multiple fields
+	// Repeater with multiple fields
 	$fields_array[] = [
 		'meta_key'     => 'external_reviews',
 		'control'      => 'repeater',
@@ -75,7 +75,7 @@ function sgf_post_fields( $fields_array ) {
 		],
 	];
 
-// Color fields in separate panel
+	// Color fields in separate panel
 	$fields_array[] = [
 		'meta_key' => 'footer_override_color',
 		'control'  => 'color',
@@ -87,7 +87,7 @@ function sgf_post_fields( $fields_array ) {
 		'panel'    => 'override_styles',
 	];
 
-// Image field in separate panel
+	// Image field in separate panel
 	$fields_array[] = [
 		'meta_key' => 'footer_override_background_image',
 		'type'     => 'integer',
@@ -104,7 +104,56 @@ function sgf_post_fields( $fields_array ) {
 		'panel'    => 'override_background_image',
 	];
 
-	$fields_array = array_map( function ( $field ) {
+	// Multiselect
+	$fields_array[] = [
+		'single'       => true,
+		'meta_key'     => 'related_products',
+		'control'      => 'multiselect',
+		'type'         => 'array',
+		'options'      => ats_get_operators_dropdown(),
+		'show_in_rest' => [
+			'schema' => [
+				'type'  => 'array',
+				'items' => [
+					'type' => 'number'
+				],
+			],
+
+		]
+	];
+
+	// Multiselect inside repeater
+	$fields_array[] = [
+		'meta_key'     => 'books',
+		'control'      => 'repeater',
+		'type'         => 'array',
+		'default'      => [],
+		'show_in_rest' => [
+			'schema' => [
+				'items' => [
+					'type'       => 'object',
+					'properties' => [
+						'book_name' => [
+							'type'    => 'string',
+							'control' => 'text'
+						],
+						'languages' => [
+							'type'    => 'array',
+							'control' => 'multiselect',
+							'options' => [
+								[ 'value' => 'EN', 'label' => 'English' ],
+								[ 'value' => 'ES', 'label' => 'Spanish' ]
+							],
+							'default' => [],
+							'label'   => 'Select States'
+						],
+					],
+				]
+			],
+		],
+		'panel'        => 'Books Repeater'
+	];
+	$fields_array   = array_map( function ( $field ) {
 		$field['post_type'] = $field['post_type'] ?? 'post';
 		$field['control']   = $field['control'] ?? 'text';
 		$field['panel']     = $field['panel'] ?? 'custom-fields';
@@ -115,6 +164,3 @@ function sgf_post_fields( $fields_array ) {
 
 	return $fields_array;
 }
-
-
-
