@@ -1,9 +1,37 @@
 <?php
 // Uncomment next line to show post demo fields
-//add_filter( 'sgf_register_fields', 'sgf_post_fields' );
+add_filter( 'sgf_register_fields', 'sgf_post_fields' );
 
 // Register operator fields
 function sgf_post_fields( $fields_array ) {
+$fields_array[] = [
+	    'meta_key'     => 'multi',
+        'control'      => 'multiselect',
+        'type'         => 'array',
+        'default'      => [],
+        'options'      => [
+            ['value' => 'vanilla', 'label' => 'Vanilla'],
+            ['value' => 'chocolate', 'label' => 'Chocolate'],
+            ['value' => 'strawberry', 'label' => 'Strawberry'],
+            ['value' => 'salted-caramel', 'label' => 'Salted Caramel'],
+        ],
+        'isMulti'      => true,
+        'show_in_rest' => [
+            'schema' => [
+                'items' => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'label' => [
+                            'type' => 'string',
+                        ],
+                        'value' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+	];
 //Simple text field
 	$fields_array[] = [
 		'meta_key' => 'publisher',
