@@ -61,7 +61,7 @@ This plugin goal is to demonstrate a concept and may be used as a base for field
 
 ### Fields settings examples
 
-```
+```php
 //Simple text field
 $fields_array[] = [
 	'meta_key' => 'publisher',
