@@ -58,3 +58,157 @@ The file ```register-fields.php``` contains examples for all fields
 The node commands are based on [wp scripts create block](https://developer.wordpress.org/block-editor/packages/packages-create-block/) 
 ### Experimental concept
 This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not the plugin as is on a live site.
+
+### Examples
+
+```
+//Simple text field
+$fields_array[] = [
+	'meta_key' => 'publisher',
+];
+
+// Number field with default
+	$fields_array[] = [
+	'meta_key' => 'sales',
+	'type'     => 'number',
+	'default'  => 100,
+];
+
+// Select with default
+
+$month_options = array_map( function ( $value ) {
+$label = date( 'F', strtotime( date( 'Y' ) . "-" . str_pad( $value, 2, '0', STR_PAD_LEFT ) . "-01" ) );
+
+return [ 'value' => $value, 'label' => $label ];
+}, range( 1, 12 ) );
+
+$fields_array[] = [
+	'meta_key' => 'month',
+	'default'  => (int) date( 'F' ),
+	'control'  => 'select',
+	'options'  => $month_options,
+	'type'     => 'number',
+];
+
+// Simple repeater
+$fields_array[] = [
+	'meta_key'     => 'books',
+	'control'      => 'repeater',
+	'type'         => 'array',
+	'default'      => [ [ 'title' => '' ] ],
+	'show_in_rest' => [
+		'schema' => [
+			'items' => [
+				'type'       => 'object',
+				'properties' => [
+					'title' => [
+						'type' => 'string',
+					],
+				],
+			],
+		],
+	],
+];
+
+// Repeater with multiple fields
+$fields_array[] = [
+	'meta_key'     => 'external_reviews',
+	'control'      => 'repeater',
+	'type'         => 'array',
+	'default'      => [],
+	'show_in_rest' => [
+		'schema' => [
+			'items' => [
+				'type'       => 'object',
+				'properties' => [
+					'url'       => [
+						'type' => 'string',
+					],
+					'site_name' => [
+						'type' => 'string',
+					],
+				],
+			]
+		],
+	],
+];
+
+// Color fields in separate panel
+$fields_array[] = [
+	'meta_key' => 'footer_override_color',
+	'control'  => 'color',
+	'panel'    => 'override_styles',
+];
+$fields_array[] = [
+	'meta_key' => 'sidebar_override_color',
+	'control'  => 'color',
+	'panel'    => 'override_styles',
+];
+
+// Image field in separate panel
+$fields_array[] = [
+	'meta_key' => 'footer_override_background_image',
+	'type'     => 'integer',
+	'default'  => 0,
+	'control'  => 'media',
+	'panel'    => 'override_background_image',
+];
+
+$fields_array[] = [
+	'meta_key' => 'sidebar_override_background_image',
+	'type'     => 'integer',
+	'default'  => 0,
+	'control'  => 'media',
+	'panel'    => 'override_background_image',
+];
+
+// Multiselect
+$fields_array[] = [
+	'single'       => true,
+	'meta_key'     => 'related_products',
+	'control'      => 'multiselect',
+	'type'         => 'array',
+	'options'      => ats_get_operators_dropdown(),
+	'show_in_rest' => [
+		'schema' => [
+			'type'  => 'array',
+			'items' => [
+				'type' => 'number'
+			],
+		],
+
+	]
+];
+
+// Multiselect inside repeater
+$fields_array[] = [
+	'meta_key'     => 'books',
+	'control'      => 'repeater',
+	'type'         => 'array',
+	'default'      => [],
+	'show_in_rest' => [
+		'schema' => [
+			'items' => [
+				'type'       => 'object',
+				'properties' => [
+					'book_name' => [
+						'type'    => 'string',
+						'control' => 'text'
+					],
+					'languages' => [
+						'type'    => 'array',
+						'control' => 'multiselect',
+						'options' => [
+							[ 'value' => 'EN', 'label' => 'English' ],
+							[ 'value' => 'ES', 'label' => 'Spanish' ]
+						],
+						'default' => [],
+						'label'   => 'Select States'
+					],
+				],
+			]
+		],
+	],
+	'panel'        => 'Books Repeater'
+];
+```
