@@ -59,7 +59,7 @@ The node commands are based on [wp scripts create block](https://developer.wordp
 ### Experimental concept
 This plugin goal is to demonstrate a concept and may be used as a base for fields setup but is not production ready. It's strongly recommended to not the plugin as is on a live site.
 
-### Examples
+### Fields settings examples
 
 ```
 //Simple text field
