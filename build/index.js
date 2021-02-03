@@ -8805,7 +8805,10 @@ var mediaUpload = function mediaUpload(_ref) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
+
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -8817,6 +8820,11 @@ var _wp$data = wp.data,
     withSelect = _wp$data.withSelect,
     select = _wp$data.select,
     withDispatch = _wp$data.withDispatch;
+
+var isRepeater = function isRepeater(rowIndex) {
+  return typeof rowIndex !== 'undefined';
+};
+
 var ControlField = withSelect(function (select, props) {
   var _props$field = props.field,
       label = _props$field.label,
@@ -8828,40 +8836,26 @@ var ControlField = withSelect(function (select, props) {
   var value = select('core/editor').getEditedPostAttribute('meta')[meta_key];
   var key = meta_key + row_index + property_key;
   var isMultiProp = isMulti !== null && isMulti !== void 0 ? isMulti : true;
-  var defaultValue = [];
+  var defaultValue = []; // Setting labels by the options array
 
-  if (typeof row_index === 'undefined') {
+  if (!isRepeater(row_index)) {
+    // If not inside repeater label is value, value is the array
     defaultValue = [];
-    defaultValue = Array.isArray(value) ? value.map(function (item) {
-      var _props$field2, _props$field2$show_in, _props$field2$show_in2, _props$field2$show_in3;
-
-      var arrayItemProperties = props === null || props === void 0 ? void 0 : (_props$field2 = props.field) === null || _props$field2 === void 0 ? void 0 : (_props$field2$show_in = _props$field2.show_in_rest) === null || _props$field2$show_in === void 0 ? void 0 : (_props$field2$show_in2 = _props$field2$show_in.schema) === null || _props$field2$show_in2 === void 0 ? void 0 : (_props$field2$show_in3 = _props$field2$show_in2.items) === null || _props$field2$show_in3 === void 0 ? void 0 : _props$field2$show_in3.properties;
-      var arrayItemKey = Object.keys(arrayItemProperties)[0];
-      var lookInOptions = item[arrayItemKey];
-      var labelOption = options.find(function (propOption) {
-        return propOption.value === lookInOptions;
+    defaultValue = Array.isArray(value) ? value.map(function (arrayItem) {
+      var isOption = options.find(function (option) {
+        return option.value == arrayItem;
       });
-      var label = labelOption ? labelOption.label : item[arrayItemKey];
-      var val = item[arrayItemKey];
+      var label = value;
+
+      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(isOption) === 'object' && isOption !== null) {
+        label = isOption.label;
+      }
+
       return {
-        value: val,
+        value: arrayItem,
         label: label
       };
     }) : [];
-  } else {
-    defaultValue = value[row_index] && Array.isArray(value[row_index][property_key]) ? value[row_index][property_key].map(function (option) {
-      var labelOption = options.find(function (propOption) {
-        return propOption.value === option;
-      });
-      var label = labelOption ? labelOption.label : option;
-      return {
-        value: option,
-        label: label
-      };
-    }) : [];
-  }
-
-  if (typeof row_index === 'undefined') {
     return {
       isMulti: isMultiProp,
       placeholder: label,
@@ -8870,43 +8864,53 @@ var ControlField = withSelect(function (select, props) {
       options: options,
       label: "Set ".concat(label)
     };
+  } else {
+    // Inside repeater we fetching the value by row index
+    defaultValue = value[row_index][property_key] && Array.isArray(value[row_index][property_key]) ? value[row_index][property_key].map(function (option) {
+      var labelOption = options.find(function (propOption) {
+        return propOption.value == option;
+      });
+      var label = labelOption ? labelOption.label : option;
+      return {
+        value: option,
+        label: label
+      };
+    }) : [];
+    return {
+      placeholder: label,
+      isMulti: isMultiProp,
+      defaultValue: defaultValue,
+      key: key,
+      options: options,
+      label: "Set ".concat(label)
+    };
   }
-
-  return {
-    placeholder: label,
-    isMulti: isMultiProp,
-    defaultValue: defaultValue,
-    key: key,
-    options: options,
-    label: "Set ".concat(property_key.replace('_', ' '))
-  };
-})(react_select__WEBPACK_IMPORTED_MODULE_1__["default"]);
+})(react_select__WEBPACK_IMPORTED_MODULE_2__["default"]);
 ControlField = withDispatch(function (dispatch, props) {
   var meta_key = props.field.meta_key;
   var row_index = props.row_index,
       property_key = props.property_key;
   return {
     onChange: function onChange(value) {
-      console.log(value);
-      var flatArray = value.map ? value.map(function (option) {
-        return option.value;
-      }) : [value.value];
-      var newValue;
+      var flatArray = [];
 
-      if (typeof row_index !== 'undefined') {
+      if (Array.isArray(value)) {
+        flatArray = value.map(function (option) {
+          return option.value;
+        });
+      } else {
+        // When is multi false we saving the value in array of 1 item to beep the data type array
+        flatArray = [value.value];
+      }
+
+      var newValue = flatArray; // In repeater fields we setting the value on the parent meta value before update
+
+      if (isRepeater(row_index)) {
         var _select$getEditedPost;
 
         var repeaterValues = (_select$getEditedPost = select('core/editor').getEditedPostAttribute('meta')) === null || _select$getEditedPost === void 0 ? void 0 : _select$getEditedPost[meta_key];
         newValue = repeaterValues.map(function (row, innerIndex) {
-          return innerIndex === row_index ? _objectSpread(_objectSpread({}, row), {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, property_key, flatArray)) : row;
-        });
-      } else {
-        var _props$field3, _props$field3$show_in, _props$field3$show_in2, _props$field3$show_in3;
-
-        var arrayItemProperties = props === null || props === void 0 ? void 0 : (_props$field3 = props.field) === null || _props$field3 === void 0 ? void 0 : (_props$field3$show_in = _props$field3.show_in_rest) === null || _props$field3$show_in === void 0 ? void 0 : (_props$field3$show_in2 = _props$field3$show_in.schema) === null || _props$field3$show_in2 === void 0 ? void 0 : (_props$field3$show_in3 = _props$field3$show_in2.items) === null || _props$field3$show_in3 === void 0 ? void 0 : _props$field3$show_in3.properties;
-        var arrayItemKey = Object.keys(arrayItemProperties)[0];
-        newValue = flatArray.map(function (val) {
-          return _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, arrayItemKey, val);
+          return innerIndex === row_index ? _objectSpread(_objectSpread({}, row), {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, property_key, newValue)) : row;
         });
       }
 
