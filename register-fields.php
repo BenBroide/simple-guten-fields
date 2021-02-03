@@ -1,6 +1,6 @@
 <?php
 // Uncomment next line to show post demo fields in post type "Post"
-//add_filter( 'sgf_register_fields', 'sgf_post_fields' );
+add_filter( 'sgf_register_fields', 'sgf_post_fields' );
 
 // Register operator fields
 function sgf_post_fields( $fields_array ) {
@@ -34,10 +34,9 @@ function sgf_post_fields( $fields_array ) {
 
 	// Simple repeater
 	$fields_array[] = [
-		'meta_key'     => 'books',
+		'meta_key'     => 'books1',
 		'control'      => 'repeater',
 		'type'         => 'array',
-		'parent'       => true,
 		'default'      => [
 		    [
                 'title'        => '',

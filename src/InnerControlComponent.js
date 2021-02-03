@@ -9,11 +9,13 @@ const InnerControlComponent = ({
                                  row_index,
                                  property_key,
                                  repeater_record_label,
-                                 parent,
                                  parent_property_key,
-                                 parent_row_index
+                                 parent_row_index,
+                                 parent_control,
+                                 isChild
                                }) => {
   const controlFieldKey = field.control ?? 'text';
+  isChild = !!(isChild || field.control === parent_control);
   const ControlField = controlsIndex[controlFieldKey];
   const repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key];
 
@@ -29,6 +31,7 @@ const InnerControlComponent = ({
       parent_row_index={parent_row_index}
       parent={parent}
       label={field.label}
+      isChild={isChild}
     />
   );
 };

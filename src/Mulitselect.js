@@ -19,7 +19,7 @@ const isRepeater = (rowIndex) => {
   return typeof rowIndex !== 'undefined';
 };
 let ControlField = withSelect(
-  (select, { field: { label, meta_key, options, isMulti, show_in_rest }, row_index, property_key }) => {
+  (select, { field: { label, meta_key, options, isMulti }, row_index, property_key }) => {
     const values = select('core/editor').getEditedPostAttribute('meta')[meta_key];
     const key = meta_key + row_index + property_key;
     const isMultiProp = isMulti ?? true;
@@ -60,7 +60,7 @@ let ControlField = withSelect(
       distance: 4,
       placeholder: label,
       isMulti: isMultiProp,
-      defaultValue,
+      value: defaultValue,
       key,
       options,
       label: `Set ${label}`,
@@ -94,9 +94,22 @@ ControlField = withDispatch(
       },
 
       onSortEnd: ({ oldIndex, newIndex }) => {
-        const values = select('core/editor').getEditedPostAttribute('meta')?.[meta_key];
-        const newValues = arrayMove(values, oldIndex, newIndex);
+        let values = select('core/editor').getEditedPostAttribute('meta')?.[meta_key];
 
+        let newValues;
+        if (!isRepeater(row_index)) {
+          newValues = arrayMove(values, oldIndex, newIndex);
+        } else {
+          newValues = values.map((row, innerIndex) => {
+            return innerIndex === row_index
+              ? {
+                ...row,
+                [property_key]: arrayMove(row[property_key], oldIndex, newIndex)
+              }
+              : row;
+          });
+        }
+        
         dispatch('core/editor').editPost({ meta: { [meta_key]: newValues } });
       }
     };

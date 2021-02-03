@@ -5,10 +5,11 @@ const { withDispatch, useSelect } = wp.data;
 let ControlField = ({
                       addItem,
                       removeItem,
-                      field: { meta_key, label, show_in_rest, parent },
+                      field: { meta_key, label, show_in_rest, control },
                       controlsIndex,
                       property_key,
-                      row_index
+                      row_index,
+                      isChild
                     }) => {
 
   const properties = show_in_rest?.schema?.items?.properties;
@@ -20,12 +21,12 @@ let ControlField = ({
   let loopRepeaterValues = repeaterValues;
   let innerText = '';
 
-  if (!parent) {
+  if (isChild) {
     loopRepeaterValues = repeaterValues[row_index][property_key];
     innerText = 'Inner ';
   }
 
-  return <div style={{ marginLeft: parent ? 0 : 10 }}>
+  return <div style={{ marginLeft: !isChild ? 0 : 10 }}>
     <h3>{`${innerText}${label}`} (Repeater field):</h3>
     {Array.isArray(loopRepeaterValues) && loopRepeaterValues.map((row, index) => {
       return (
@@ -40,19 +41,20 @@ let ControlField = ({
                 key={index + property_key}
                 field={innerField}
                 row_index={index}
+                parent_control={control}
                 parent_row_index={row_index}
                 property_key={propertyKey}
                 parent_property_key={property_key}
                 repeater_record_label={`${label} ${propertyKey}`}
                 repeater_values={loopRepeaterValues}
                 control_index={controlsIndex}
-                parent={parent}
+                isChild={isChild}
               />
             );
           })}
           {
             index > 0
-            && <button onClick={() => removeItem(meta_key, index, repeaterValues, parent, row_index, property_key)}
+            && <button onClick={() => removeItem(meta_key, index, repeaterValues, isChild, row_index, property_key)}
             >
               Remove {innerText}line {index + 1}
             </button>
@@ -63,7 +65,7 @@ let ControlField = ({
     })}
     <button
       style={{ marginTop: '10px' }}
-      onClick={() => addItem(meta_key, repeaterValues, parent, row_index, property_key)}
+      onClick={() => addItem(meta_key, repeaterValues, isChild, row_index, property_key)}
     >
       Add {innerText}Item
     </button>
@@ -73,8 +75,8 @@ let ControlField = ({
 ControlField = withDispatch(
   (dispatch) => {
     return {
-      addItem: (meta_key, repeaterValues, parent, row_index, property_key) => {
-        if (!parent) {
+      addItem: (meta_key, repeaterValues, isChild, row_index, property_key) => {
+        if (isChild) {
           if (repeaterValues[row_index][property_key]) {
             repeaterValues[row_index][property_key].push({});
           } else {
@@ -88,9 +90,9 @@ ControlField = withDispatch(
         dispatch('core/editor').editPost({ meta: { [meta_key]: repeaterValuesCopy } });
 
       },
-      removeItem: (meta_key, index, repeaterValues, parent, row_index, property_key) => {
+      removeItem: (meta_key, index, repeaterValues, isChild, row_index, property_key) => {
         if (confirm("Confirm delete")) {
-          if (parent) {
+          if (!isChild) {
             repeaterValues = repeaterValues.filter((obj, loopIndex) => loopIndex !== index);
           } else {
             repeaterValues[row_index][property_key] = repeaterValues[row_index][property_key].filter((obj, loopIndex) => loopIndex !== index);
@@ -104,13 +106,14 @@ ControlField = withDispatch(
   }
 )(ControlField);
 
-const RepeaterControl = ({ field, controlsIndex, property_key, row_index }) => {
+const RepeaterControl = ({ field, controlsIndex, property_key, row_index, isChild = false }) => {
   return (
     <ControlField
       field={field}
       controlsIndex={controlsIndex}
       property_key={property_key}
       row_index={row_index}
+      isChild={isChild}
     />
   );
 };
