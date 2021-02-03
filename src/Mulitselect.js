@@ -16,8 +16,8 @@ const SortableMultiValue = SortableElement(props => {
 const SortableSelect = SortableContainer(Select);
 
 const isRepeater = (rowIndex) => {
-    return typeof rowIndex !== 'undefined'
-}
+  return typeof rowIndex !== 'undefined';
+};
 let ControlField = withSelect(
   (select, { field: { label, meta_key, options, isMulti, show_in_rest }, row_index, property_key }) => {
     const values = select('core/editor').getEditedPostAttribute('meta')[meta_key];
@@ -26,12 +26,12 @@ let ControlField = withSelect(
 
     if (!isRepeater(row_index)) {
       const defaultValue = Array.isArray(values) ? values.map(item => {
-        const isOption = options.find(option => option.value == arrayItem)
-        const label = values
-        if(typeof isOption === 'object' && isOption !== null) {
-          label = isOption.label
+        const isOption = options.find(option => option.value == item);
+        let label = values;
+        if (typeof isOption === 'object' && isOption !== null) {
+          label = isOption.label;
         }
-        return {value: item, label: label}
+        return { value: item, label: label };
       }) : [];
 
       return {
@@ -49,9 +49,9 @@ let ControlField = withSelect(
 
     const defaultValue = values[row_index][property_key] && Array.isArray(values[row_index][property_key])
       ? values[row_index][property_key].map(option => {
-        let labelOption = options.find(propOption => propOption.value == option)
-        let label = labelOption ? labelOption.label : option
-        return {value: option, label: label}
+        let labelOption = options.find(propOption => propOption.value == option);
+        let label = labelOption ? labelOption.label : option;
+        return { value: option, label: label };
       })
       : [];
 
@@ -70,24 +70,23 @@ let ControlField = withSelect(
 )(SortableSelect);
 
 ControlField = withDispatch(
-  (dispatch, { field: { meta_key, show_in_rest }, row_index, property_key }) => {
+  (dispatch, { field: { meta_key }, row_index, property_key }) => {
     return {
       onChange: (value) => {
-        let flatArray = []
-        if(Array.isArray(value)) {
-          flatArray = value.map(option => option.value)
+        let flatArray = [];
+        if (Array.isArray(value)) {
+          flatArray = value.map(option => option.value);
         } else {
           // When is multi false we saving the value in array of 1 item to beep the data type array
-          flatArray = [value.value]
+          flatArray = [ value.value ];
         }
 
-        let newValue = flatArray
+        let newValue = flatArray;
         // In repeater fields we setting the value on the parent meta value before update
-        if(isRepeater(row_index)) {
-          let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key]
+        if (isRepeater(row_index)) {
+          let repeaterValues = select('core/editor').getEditedPostAttribute('meta')?.[meta_key];
           newValue = repeaterValues.map((row, innerIndex) => {
-
-            return innerIndex === row_index ? {...row, [property_key]: newValue} : row
+            return innerIndex === row_index ? { ...row, [property_key]: newValue } : row;
           });
         }
 
