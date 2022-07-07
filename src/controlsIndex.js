@@ -6,6 +6,7 @@ import SelectControlComponent from "./SelectControl";
 import MediaUpload from "./MediaUpload";
 import RepeaterControl from "./RepeaterControl";
 import Multiselect from "./Mulitselect";
+import DatePicker from "./DatePickerControl";
 
 const controlsIndex =
     {
@@ -16,6 +17,7 @@ const controlsIndex =
         select: SelectControlComponent,
         media: MediaUpload,
         repeater: RepeaterControl,
-        multiselect: Multiselect
+        multiselect: Multiselect,
+        datepicker: DatePicker
     }
 export default controlsIndex

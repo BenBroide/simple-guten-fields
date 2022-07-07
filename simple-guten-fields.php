@@ -4,6 +4,8 @@
  * Description:     Simple Guten Fields is a concept of adding custom fields to Gutenberg editor.
  */
 include( 'register-fields.php' );
+include('helpers.php');
+
 function sgf_load_scripts() {
 	$dir = __DIR__;
 
